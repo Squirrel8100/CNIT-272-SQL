@@ -1,0 +1,305 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 3 HOURS
+*********************Question 1*********************************
+*/
+SET LINESPACE 200;
+SELECT ROUND(4956.5795,2) FROM DUAL;
+SELECT USER FROM DUAL;
+SELECT SYSDATE FROM DUAL;
+SELECT CEIL(4956.5795) FROM DUAL;
+SELECT FLOOR(4956.5795) FROM DUAL;
+
+/*
+USER                                                                                                                            
+--------------------------------------------------------------------------------------------------------------------------------
+FISHL
+
+
+SYSDATE  
+---------
+09-MAR-21
+
+
+CEIL(4956.5795)
+---------------
+           4957
+
+
+FLOOR(4956.5795)
+----------------
+            4956
+*/
+
+--*********************Question 2*********************************
+SELECT CUSTOMERID, CUSTFIRSTNAME || ' ' || CUSTLASTNAME as CONTACT, nvl(EMAILADDR, '*EMAIL MISSING*') AS EMAIL_ADDRESS
+FROM CUSTOMER
+WHERE STATE = 'IL' ;
+
+--results
+/*
+
+CUSTOMERID CONTACT                              EMAIL_ADDRESS                                     
+---------- ------------------------------------ --------------------------------------------------
+I-200038   David Smith                          dsmith443@outlook.com                             
+I-200094   Jay Hanau                            *EMAIL MISSING*                                   
+C-200026   Jim Lichty                           bankrupt@live.com                                 
+C-200075   Aricka Bross                         placetolive@aptref.com                            
+I-200006   Eric Fannon                          ef@yahoo.com                      
+*/
+
+--*********************Question 3*********************************
+SELECT CATEGORYID, COUNT(STOCKLEVEL) AS STOCK_LEVEL, min(WEIGHT) AS MIN_WEIGHT, max(WEIGHT) AS MAX_WEIGHT, avg(WEIGHT) AS AVG_WEIGHT
+FROM INVENTORYPART
+WHERE STOCKLEVEL  >'15' AND CATEGORYID IS NOT NULL
+GROUP BY CATEGORYID;
+
+--RESULTS
+/*
+CATEGORYID STOCK_LEVEL MIN_WEIGHT MAX_WEIGHT AVG_WEIGHT
+---------- ----------- ---------- ---------- ----------
+BASE                17       .188       5.75 2.22511765
+STOR                11         .5          3 1.59090909
+PROC                13       .063         .5 .217692308
+SFTW                 8       .188      1.438     .68775
+CBL                 32       .125      1.563    .484625
+KEY                  3          2          2          2
+
+6 rows selected. 
+*/
+
+--*********************Question 4*********************************
+SELECT CATEGORYID, COUNT(STOCKLEVEL) AS STOCK_LEVEL, min(WEIGHT) AS MIN_WEIGHT, max(WEIGHT) AS MAX_WEIGHT, ROUND(avg(WEIGHT),2) AS AVG_WEIGHT 
+FROM INVENTORYPART
+WHERE STOCKLEVEL  >'15' AND CATEGORYID IS NOT NULL  
+GROUP BY CATEGORYID
+HAVING count(PARTNUMBER) > '12';
+--results
+/*
+
+CATEGORYID STOCK_LEVEL MIN_WEIGHT MAX_WEIGHT AVG_WEIGHT
+---------- ----------- ---------- ---------- ----------
+BASE                17       .188       5.75       2.23
+PROC                13       .063         .5        .22
+CBL                 32       .125      1.563        .48
+
+*/
+
+--*********************Question 5A and 5B*********************************
+
+SELECT ORDERID, UNITPRICE, ORDERQUANTITY, lpad(STATUS, 15, '#')
+FROM CUSTORDERLINE
+WHERE ORDERQUANTITY between '25' and '35'
+GROUP BY ORDERID, UNITPRICE, ORDERQUANTITY, STATUS
+HAVING UNITPRICE < (SELECT avg(UNITPRICE) from CUSTORDERLINE);
+--results
+/*
+ORDERID     UNITPRICE ORDERQUANTITY LPAD(STATUS,15,
+---------- ---------- ------------- ---------------
+3001000794       7.99            28 ########SHIPPED
+3001000519      59.95            25 ########SHIPPED
+3001000626      14.99            25 ########SHIPPED
+3001000676       29.5            27 ########SHIPPED
+3001000805      68.95            30 ########PENDING
+3001000524      39.99            25 ########SHIPPED
+3000000024      12.99            25 ########SHIPPED
+3000000379      31.95            30 ########SHIPPED
+3001000782      14.95            30 ########SHIPPED
+3000000054       5.99            30 ########SHIPPED
+3001000797      14.99            29 #########PACKED
+
+ORDERID     UNITPRICE ORDERQUANTITY LPAD(STATUS,15,
+---------- ---------- ------------- ---------------
+3000000129       6.99            30 ########SHIPPED
+3000000041       9.99            25 ########SHIPPED
+3000000024       7.99            30 ########SHIPPED
+3000000412      24.95            25 ########SHIPPED
+3000000482       5.99            26 ########SHIPPED
+3001000767       7.99            35 ########SHIPPED
+3001000641       5.99            27 ########SHIPPED
+3001000705       9.99            28 ########SHIPPED
+
+19 rows selected. 
+*/
+--*********************Question 6*********************************
+SELECT INSERVICEDATE, add_months(INSERVICEDATE, 6), MANUFACTURERNAME || ' ' || MAKE || ' ' || model as MACHINE_INFO
+FROM MACHINE;
+--RESULTS
+/*
+
+INSERVICE ADD_MONTH MACHINE_INFO                                                                 
+--------- --------- -----------------------------------------------------------------------------
+13-JAN-13 13-JUL-13 ATD INKJET SYSTEMS BARCODE SYSTEM IP9000                                     
+20-MAY-17 20-NOV-17 CONVEYORS UNLIMITED LINESHAFT CONVEYOR STAINLESS STEEL                       
+24-MAR-12 24-SEP-12 SERGE #99234 NEW JERSEY 304R-851                                             
+26-NOV-15 26-MAY-16 SERGE #98577 DEWEL PACK DPTB200                                              
+10-JUN-14 10-DEC-14 ADEPT ADEPT ONE XL                                                           
+10-FEB-13 10-AUG-13 ADEPT ADEPT ONE XL                                                           
+23-FEB-15 23-AUG-15 SERGE #98766 PACKAGE UE6A                                                    
+24-MAR-11 24-SEP-11 ZT410 RFID PRINTER RFID SYSTEM ZT410                                         
+
+8 rows selected. 
+*/
+
+--*********************Question 7*********************************
+SELECT SUBSTR(HOMEPHONE, 1, 7) AS ARC_PRE, COUNT(SUBSTR(HOMEPHONE, 1, 7)) AS EMPLOYEE
+FROM EMPLOYEE
+GROUP BY SUBSTR(HOMEPHONE, 1, 7)
+HAVING COUNT(*) >= 2;
+--RESULTS
+/*
+ARC_PRE   EMPLOYEE
+------- ----------
+203-747          9
+203-486         10
+860-763          9
+860-498          5
+203-774          8
+*/
+
+--*********************Question 8A*********************************
+
+SELECT STATUS, COUNT(*), ROUND(SUM(UNITPRICE * ORDERQUANTITY), 2) AS SUBTOTAL
+FROM CUSTORDERLINE
+GROUP BY STATUS;
+--RESULTS
+/*
+INSERVICE ADD_MONTH MACHINE_INFO                                                                 
+--------- --------- -----------------------------------------------------------------------------
+13-JAN-13 13-JUL-13 ATD INKJET SYSTEMS BARCODE SYSTEM IP9000                                     
+20-MAY-17 20-NOV-17 CONVEYORS UNLIMITED LINESHAFT CONVEYOR STAINLESS STEEL                       
+24-MAR-12 24-SEP-12 SERGE #99234 NEW JERSEY 304R-851                                             
+26-NOV-15 26-MAY-16 SERGE #98577 DEWEL PACK DPTB200                                              
+10-JUN-14 10-DEC-14 ADEPT ADEPT ONE XL                                                           
+10-FEB-13 10-AUG-13 ADEPT ADEPT ONE XL                                                           
+23-FEB-15 23-AUG-15 SERGE #98766 PACKAGE UE6A                                                    
+24-MAR-11 24-SEP-11 ZT410 RFID PRINTER RFID SYSTEM ZT410                                         
+
+8 rows selected. 
+*/
+--*********************Question 8B*********************************
+SELECT STATUS, COUNT(*), ROUND(SUM(UNITPRICE * ORDERQUANTITY), 2) AS SUBTOTAL
+FROM CUSTORDERLINE
+GROUP BY STATUS
+HAVING SUM(UNITPRICE * ORDERQUANTITY) < 20000;
+--RESULTS
+/*
+STATUS            COUNT(*)   SUBTOTAL
+--------------- ---------- ----------
+PACKED                   8    4953.04
+PICKED                  13   10984.79
+*/
+
+--*********************Question 8C*********************************
+SELECT STATUS, DISCOUNT, COUNT(*), ROUND(SUM(UNITPRICE * ORDERQUANTITY), 2) AS SUBTOTAL
+FROM CUSTORDERLINE
+GROUP BY STATUS, DISCOUNT
+HAVING SUM(UNITPRICE * ORDERQUANTITY) < 20000;
+--RESULTS
+/*
+STATUS            DISCOUNT   COUNT(*)   SUBTOTAL
+--------------- ---------- ---------- ----------
+PENDING                  3          7    8513.46
+PACKED                   0          7    4518.33
+PENDING                 10          2    7860.54
+PICKED                  10          3    8997.38
+SHIPPED                 15          1      13972
+PART SHIP                0          1      49.95
+PICKED                   0         10    1987.41
+PACKED                   3          1     434.71
+*/
+
+--*********************Question 8D*********************************
+SELECT UNITPRICE, ORDERQUANTITY, (UNITPRICE * ORDERQUANTITY) AS SUM
+FROM CUSTORDERLINE
+WHERE STATUS = 'PACKED';
+--RESULTS
+/*
+
+ UNITPRICE ORDERQUANTITY        SUM
+---------- ------------- ----------
+     12.99             1      12.99
+     69.99             1      69.99
+     31.95             3      95.85
+      5.99             1       5.99
+     44.99             2      89.98
+     14.99            29     434.71
+   1846.79             2    3693.58
+    109.99             5     549.95
+
+8 rows selected. 
+*/
+
+
+
+--*********************Question 9*********************************
+SELECT EMPLOYEEID, SUPPLIERID, PAIDINFULL, DATEORDERED, DATEDELIVERED
+FROM PURCHASEORDER
+WHERE DATEORDERED = (SELECT MAX(DATEORDERED) AS RECENT_DATE FROM PURCHASEORDER);
+--RESULTS
+/*
+EMPLOYEEID SUPPLIERID P DATEORDER DATEDELIV
+---------- ---------- - --------- ---------
+251007     NN-455     Y 10-SEP-20 12-SEP-20
+251007     MC-455     Y 10-SEP-20 13-SEP-20
+250880     OI-450     Y 10-SEP-20 12-SEP-20
+250880     MSN-105    Y 10-SEP-20 14-SEP-20
+*/
+--*********************Question 10A*********************************
+SELECT TO_CHAR(SYSDATE, 'Month DD , YYYY') 
+FROM DUAL;
+--results
+/*
+TO_CHAR(SYSDATE,'MO
+-------------------
+March     10 , 2021
+
+*/
+
+--*********************Question 10B*********************************
+SELECT TO_CHAR(SYSDATE, 'day Month, YYYY')
+FROM DUAL;
+--results
+/*
+TO_CHAR(SYSDATE,'DAYMONTH
+-------------------------
+wednesday March    , 2021
+*/
+
+--*********************Question 10C*********************************
+SELECT USER, to_char(to_date('02-May-2000'), 'month-dd-yyyy, day')
+FROM DUAL;
+
+--results
+/*
+
+USER                                                                                                                             TO_CHAR(TO_DATE('02-MAY-2000
+-------------------------------------------------------------------------------------------------------------------------------- ----------------------------
+FISHL                                                                                                                            may      -02-2000, tuesday  
+*/
+
+
+--*********************Question 11*********************************
+--A row Function pulls from the row, where a collumn function pulls
+--from a collumn.
+
+--*********************Question 12*********************************
+--Using a nested subquery allows for another filter to be added into the query. 
+--example of using a nested query when trying to filter by a row and by an aggregate function. 
+-- example of using aggregates with dates the MIN gathers the oldest dates and the Max gathers
+-- the most recent dates. 
+
+--*********************Question 13*********************************
+--Where is used for restricting conditions, and having is used for 
+--aggregate function restricting conditions. 
+
+--*********************Question 14*********************************
+-- The row function SUBSTR allows for a portion of a field to be set as 
+-- starting point. 
+
+--*********************Question 15*********************************
+--Aggregate column functions must use a Group By because it groups the data together
+--that is associated with the collumn. A group by clause would be needed when using a column function
+--such as a MAX, MIN, AVG, COUNT Function. 

@@ -1,0 +1,501 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 1hr 30 minutes
+*********************Question 1A*********************************
+*/
+DESCRIBE USER_TABLES;
+
+--results
+/* 
+Name                      Null?    Type           
+------------------------- -------- -------------- 
+TABLE_NAME                NOT NULL VARCHAR2(128)  
+TABLESPACE_NAME                    VARCHAR2(30)   
+CLUSTER_NAME                       VARCHAR2(128)  
+IOT_NAME                           VARCHAR2(128)  
+STATUS                             VARCHAR2(8)    
+PCT_FREE                           NUMBER         
+PCT_USED                           NUMBER         
+INI_TRANS                          NUMBER         
+MAX_TRANS                          NUMBER         
+INITIAL_EXTENT                     NUMBER         
+NEXT_EXTENT                        NUMBER         
+MIN_EXTENTS                        NUMBER         
+MAX_EXTENTS                        NUMBER         
+PCT_INCREASE                       NUMBER         
+FREELISTS                          NUMBER         
+FREELIST_GROUPS                    NUMBER         
+LOGGING                            VARCHAR2(3)    
+BACKED_UP                          VARCHAR2(1)    
+NUM_ROWS                           NUMBER         
+BLOCKS                             NUMBER         
+EMPTY_BLOCKS                       NUMBER         
+AVG_SPACE                          NUMBER         
+CHAIN_CNT                          NUMBER         
+AVG_ROW_LEN                        NUMBER         
+AVG_SPACE_FREELIST_BLOCKS          NUMBER         
+NUM_FREELIST_BLOCKS                NUMBER         
+DEGREE                             VARCHAR2(10)   
+INSTANCES                          VARCHAR2(10)   
+CACHE                              VARCHAR2(5)    
+TABLE_LOCK                         VARCHAR2(8)    
+SAMPLE_SIZE                        NUMBER         
+LAST_ANALYZED                      DATE           
+PARTITIONED                        VARCHAR2(3)    
+IOT_TYPE                           VARCHAR2(12)   
+TEMPORARY                          VARCHAR2(1)    
+SECONDARY                          VARCHAR2(1)    
+NESTED                             VARCHAR2(3)    
+BUFFER_POOL                        VARCHAR2(7)    
+FLASH_CACHE                        VARCHAR2(7)    
+CELL_FLASH_CACHE                   VARCHAR2(7)    
+ROW_MOVEMENT                       VARCHAR2(8)    
+GLOBAL_STATS                       VARCHAR2(3)    
+USER_STATS                         VARCHAR2(3)    
+DURATION                           VARCHAR2(15)   
+SKIP_CORRUPT                       VARCHAR2(8)    
+MONITORING                         VARCHAR2(3)    
+CLUSTER_OWNER                      VARCHAR2(128)  
+DEPENDENCIES                       VARCHAR2(8)    
+COMPRESSION                        VARCHAR2(8)    
+COMPRESS_FOR                       VARCHAR2(30)   
+DROPPED                            VARCHAR2(3)    
+READ_ONLY                          VARCHAR2(3)    
+SEGMENT_CREATED                    VARCHAR2(3)    
+RESULT_CACHE                       VARCHAR2(7)    
+CLUSTERING                         VARCHAR2(3)    
+ACTIVITY_TRACKING                  VARCHAR2(23)   
+DML_TIMESTAMP                      VARCHAR2(25)   
+HAS_IDENTITY                       VARCHAR2(3)    
+CONTAINER_DATA                     VARCHAR2(3)    
+INMEMORY                           VARCHAR2(8)    
+INMEMORY_PRIORITY                  VARCHAR2(8)    
+INMEMORY_DISTRIBUTE                VARCHAR2(15)   
+INMEMORY_COMPRESSION               VARCHAR2(17)   
+INMEMORY_DUPLICATE                 VARCHAR2(13)   
+DEFAULT_COLLATION                  VARCHAR2(100)  
+DUPLICATED                         VARCHAR2(1)    
+SHARDED                            VARCHAR2(1)    
+EXTERNAL                           VARCHAR2(3)    
+HYBRID                             VARCHAR2(3)    
+CELLMEMORY                         VARCHAR2(24)   
+CONTAINERS_DEFAULT                 VARCHAR2(3)    
+CONTAINER_MAP                      VARCHAR2(3)    
+EXTENDED_DATA_LINK                 VARCHAR2(3)    
+EXTENDED_DATA_LINK_MAP             VARCHAR2(3)    
+INMEMORY_SERVICE                   VARCHAR2(12)   
+INMEMORY_SERVICE_NAME              VARCHAR2(1000) 
+CONTAINER_MAP_OBJECT               VARCHAR2(3)    
+MEMOPTIMIZE_READ                   VARCHAR2(8)    
+MEMOPTIMIZE_WRITE                  VARCHAR2(8)    
+HAS_SENSITIVE_COLUMN               VARCHAR2(3)    
+ADMIT_NULL                         VARCHAR2(3)    
+DATA_LINK_DML_ENABLED              VARCHAR2(3)    
+LOGICAL_REPLICATION                VARCHAR2(8)    
+*/
+
+--*********************Question 1B*******************************
+
+select TABLE_NAME 
+from  USER_TABLES;
+
+/*
+TABLE_NAME                                                                                                                      
+--------------------------------------------------------------------------------------------------------------------------------
+FOOD
+CUSTOMER
+SUPPLIER
+CATEGORY
+SHIPPER
+EMPLOYEE
+INVENTORYPART
+PURCHORDERLINE
+MACHINE
+PROCESSROUTING
+SUPPLIEDPART
+
+TABLE_NAME                                                                                                                      
+--------------------------------------------------------------------------------------------------------------------------------
+BILLOFMATERIALS
+PURCHASEORDER
+PROCESS
+MACHINEPROCESS
+LUNCH_ITEM
+DEPARTMENT
+SHIPPEDITEM
+OPERATION
+CUSTORDER
+CUSTORDERLINE
+SHIPMENT
+
+TABLE_NAME                                                                                                                      
+--------------------------------------------------------------------------------------------------------------------------------
+PACKINGSLIP
+FOOD_SUPPLIER
+LUNCH
+WORKER
+TIMECARDLINE
+
+27 rows selected. 
+
+*/
+
+--*********************Question 2A*******************************
+SET LINESPACE 200;
+SELECT TRUNC(477.83649, 1) FROM DUAL;
+SELECT TRUNC(477.83649, 2) FROM DUAL;
+SELECT TRUNC(477.83649, -1) FROM DUAL;
+
+--results
+/*
+
+
+TRUNC(477.83649,1)
+------------------
+             477.8
+
+
+TRUNC(477.83649,2)
+------------------
+            477.83
+
+
+TRUNC(477.83649,-1)
+-------------------
+                470
+
+*/
+--*********************Question 2B*******************************
+SELECT ROUND(477.83649, 1) FROM DUAL;
+SELECT ROUND(477.83649, 2) FROM DUAL;
+SELECT ROUND(477.83649, -1) FROM DUAL;
+
+--results
+/*
+ROUND(477.83649,1)
+------------------
+             477.8
+
+
+ROUND(477.83649,2)
+------------------
+            477.84
+
+
+ROUND(477.83649,-1)
+-------------------
+                480
+                
+*/       
+
+               
+--*********************Question 3*******************************
+
+SET LINESPACE 200;
+COL DESC__LENGTH FORMAT a11;
+SELECT DESCRIPTION, LENGTH(DESCRIPTION) AS DESC_LENGTH, PRODUCT_CODE, UPPER(PRODUCT_CODE) 
+FROM FOOD
+WHERE DESCRIPTION LIKE '%Pizza%' or DESCRIPTION LIKE '%Cake%';
+
+--results
+/*
+DESCRIPTION          DESC_LENGTH PR UP
+-------------------- ----------- -- --
+Sausage Pizza                 13 Pz PZ
+Velvet Cake                   11 Ds DS
+Mushroom Pizza                14 Pz PZ
+Cheese Pizza                  12 Pz PZ
+*/
+
+--*********************Question 4*******************************
+SELECT SUPPLIER_ID, DESCRIPTION, PRICE, NVL(PRICE_UPCHARGE, 0.1) 
+FROM FOOD 
+WHERE PRICE >= 6 AND PRICE <= 12;
+SELECT SUPPLIER_ID, DESCRIPTION, PRICE, PRICE UPCHARGE FROM FOOD WHERE PRICE >= 6 AND PRICE <= 12;
+
+--results
+/*
+SUP DESCRIPTION               PRICE   UPCHARGE
+--- -------------------- ---------- ----------
+Ard Sausage Pizza              6.25       6.25
+Hsd Protein Plate                 9          9
+Crm Philly Melt                 8.6        8.6
+Crm Ham Melt                    7.2        7.2
+Jmd Potato Soup                6.25       6.25
+Jmd Mushroom Pizza                8          8
+Dpz Cheese Pizza                8.5        8.5
+Blu Turkey Club                 7.5        7.5
+Lak Spinach Salad              6.25       6.25
+
+9 rows selected. 
+*/
+
+--*********************Question 5A*******************************
+SELECT MIN((TO_CHAR(HIRE_DATE, 'Month DD YYYY Day'))) AS MIN_DATE 
+FROM WORKER;
+
+--results
+/*
+MIN_DATE                   
+---------------------------
+April     01 2015 Wednesday
+*/
+
+--*********************Question 5B*******************************
+SELECT MAX((TO_CHAR(HIRE_DATE, 'Month DD YYYY Day'))) AS MAX_DATE 
+FROM WORKER;
+--results
+/*
+
+MAX_DATE                   
+---------------------------
+September 15 2004 Wednesday
+*/
+
+--*********************Question 6A*******************************
+select DEPT_CODE, COUNT(*) AS NUM_WORKERS, to_char(sum(credit_limit), '$999.99') as credit_score
+from worker
+group by dept_code;
+
+--results
+/*
+DEP NUM_WORKERS CREDIT_S
+--- ----------- --------
+Aud           3   $72.00
+Sal           2   $53.00
+Leg           2   $50.00
+Hmn           3   $68.00
+Acc           3   $72.00
+Tch           5  $132.00
+              7  $172.00
+Fin           2   $48.00
+Exe           1   $45.00
+Com           1   $22.00
+Srv           3   $89.00
+
+11 rows selected. 
+*/
+--*********************Question 6B*******************************
+
+select DEPT_CODE, COUNT(WORKER_ID) AS NUM_WORKERS, TO_CHAR(SUM(CREDIT_LIMIT), '$999.99') as credit_score
+FROM WORKER
+GROUP BY DEPT_CODE;
+--results
+/*
+DEP NUM_WORKERS CREDIT_S
+--- ----------- --------
+Aud           3   $72.00
+Sal           2   $53.00
+Leg           2   $50.00
+Hmn           3   $68.00
+Acc           3   $72.00
+Tch           5  $132.00
+              7  $172.00
+Fin           2   $48.00
+Exe           1   $45.00
+Com           1   $22.00
+Srv           3   $89.00
+
+11 rows selected. 
+*/
+
+--*********************Question 6C*******************************
+select DEPT_CODE, COUNT(CITY) AS NUM_WORKERS, TO_CHAR(SUM(CREDIT_LIMIT), '$999.99') as credit_score
+from WORKER
+group by DEPT_CODE;
+
+--results
+/*
+DEP NUM_WORKERS CREDIT_S
+--- ----------- --------
+Aud           2   $72.00
+Sal           2   $53.00
+Leg           2   $50.00
+Hmn           3   $68.00
+Acc           2   $72.00
+Tch           4  $132.00
+              5  $172.00
+Fin           2   $48.00
+Exe           1   $45.00
+Com           1   $22.00
+Srv           3   $89.00
+
+11 rows selected. 
+*/
+--*********************Question 7*******************************
+SELECT COUNT(*) SUPPLIER_ID, PRODUCT_CODE 
+FROM LUNCH_ITEM
+GROUP BY SUPPLIER_ID , PRODUCT_CODE
+ORDER BY SUPPLIER_ID;
+--RESULTS
+/*
+SUPPLIER_ID PR
+----------- --
+          1 Sp
+          1 Br
+          1 Sw
+          1 Pp
+          1 Cp
+          1 Br
+          1 Br
+          1 Sd
+          1 Sc
+          1 Sw
+          1 Vt
+
+SUPPLIER_ID PR
+----------- --
+          2 Pz
+          2 Pz
+          2 Sp
+          2 Pz
+          3 Sp
+          3 Ds
+          4 Sw
+          4 Ds
+          4 Br
+          4 Cf
+          5 Sw
+
+SUPPLIER_ID PR
+----------- --
+          6 Hb
+          6 Ds
+          7 Vr
+          9 Ds
+         10 Sp
+         10 Ff
+         12 Ps
+         13 Cs
+         19 Vr
+
+31 rows selected. 
+*/
+
+
+
+
+--*********************Question 8A********************************
+SELECT ROUND(AVG(PRICE), 2) AS AVERAGE_PRICE
+FROM FOOD
+GROUP BY SUPPLIER_ID;
+--results
+/*
+AVERAGE_PRICE
+-------------
+         6.25
+         5.15
+         6.26
+         3.42
+         3.69
+         3.23
+         5.88
+         2.42
+         4.65
+          4.7
+          5.4
+
+11 rows selected. 
+*/
+--*********************Question 8B********************************
+SELECT COUNT(*) AS ITEM_COUNT, ROUND(AVG(PRICE), 2) AS AVERAGE_PRICE
+FROM FOOD
+GROUP BY SUPPLIER_ID;
+/*
+--results
+ITEM_COUNT AVERAGE_PRICE
+---------- -------------
+         1          6.25
+         2          5.15
+         4          6.26
+         3          3.42
+         4          3.69
+         3          3.23
+         4          5.88
+         3          2.42
+         4          4.65
+         3           4.7
+         2           5.4
+
+11 rows selected. 
+*/
+--*********************Question 8C********************************
+SELECT ROUND(AVG(PRICE), 2) AS AVERAGE_PRICE
+FROM FOOD
+WHERE PRODUCT_CODE IN ('Pz' , 'Sp' , 'Ds')
+GROUP BY SUPPLIER_ID;
+
+--results
+/*
+AVERAGE_PRICE
+-------------
+         6.25
+          8.5
+         4.63
+          3.5
+         4.38
+         3.45
+         7.13
+         4.85
+
+8 rows selected. 
+*/
+--*********************Question 8D********************************
+SELECT ROUND(AVG(PRICE), 2) AS AVERAGE_PRICE
+FROM FOOD
+WHERE PRODUCT_CODE IN ('Pz' , 'Sp' , 'Ds') and (PRICE) > '4.5'
+GROUP BY SUPPLIER_ID;
+--results
+/*
+AVERAGE_PRICE
+-------------
+         6.25
+          8.5
+         4.75
+         7.13
+         4.85
+*/
+
+--*********************Question 9A********************************
+SELECT PRODUCT_CODE, DESCRIPTION, PRICE
+FROM FOOD
+WHERE PRICE > (SELECT AVG(PRICE) FROM FOOD);
+--RESULTS
+/*
+
+PR DESCRIPTION               PRICE
+-- -------------------- ----------
+Pz Sausage Pizza              6.25
+Cs Chef Salad                 5.75
+Pp Protein Plate                 9
+Sw Grilled Cheese             5.25
+Ps Philly Melt                 8.6
+Hb Ham Melt                    7.2
+Sp Barley Soup                4.75
+Sp Potato Soup                6.25
+Pz Mushroom Pizza                8
+Sw Grilled Cheese             5.95
+Sp Veggie Soup                4.85
+
+PR DESCRIPTION               PRICE
+-- -------------------- ----------
+Pz Cheese Pizza                8.5
+Vr Mango Smoothie             4.95
+Sw Turkey Club                 7.5
+Sw Caprese                     5.5
+Sd Spinach Salad              6.25
+
+16 rows selected. 
+*/
+--*********************Question 9B********************************
+
+SELECT AVG(PRICE) 
+FROM FOOD;
+--RESULTS
+/*
+AVG(PRICE)
+----------
+4.56212121
+*/
