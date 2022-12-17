@@ -1,0 +1,250 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 
+*********************Question 1*********************************
+*/
+SELECT supplier_id, product_code, description, price
+FROM food 
+WHERE supplier_id IN (SELECT supplier_id  FROM food_supplier WHERE supplier_name LIKE '%Deli%')
+ORDER BY SUPPLIER_ID;
+--RESULTS
+/*
+SUP PR DESCRIPTION               PRICE
+--- -- -------------------- ----------
+Blu Sw Turkey Club                 7.5
+Blu Cp Chips                       2.8
+Hsd Cs Chef Salad                 5.75
+Hsd Sp Chicken Soup               4.25
+Hsd Ds Velvet Cake                 4.5
+Hsd Pp Protein Plate                 9
+Ard Pz Sausage Pizza              6.25
+Jd6 Vr Soda                       2.25
+Jd6 Cf Coffee                     1.55
+Jd6 Ds Brownie                    3.45
+Jmd Sp Potato Soup                6.25
+
+SUP PR DESCRIPTION               PRICE
+--- -- -------------------- ----------
+Jmd Vr Iced Tea                   2.85
+Jmd Vt Cole Slaw                   1.5
+Jmd Pz Mushroom Pizza                8
+
+14 rows selected. 
+*/
+--*********************Question 2*********************************
+SET LINESIZE 200;
+SELECT worker_id, last_name, dept_code, credit_limit
+FROM WORKER
+WHERE worker_id NOT IN (SELECT DISTINCT worker_id FROM LUNCH WHERE LUNCH_ID IS NOT NULL);
+--RESULTS
+/*
+WOR LAST_NAME            DEP CREDIT_LIMIT
+--- -------------------- --- ------------
+569 Sumner               Fin           28
+583 Montre                             25
+574 Irwin                              32
+566 Tevona               Hmn           21
+586 Williams                           25
+580 Gonzalez             Acc           18
+558 Campbell             Hmn           30
+561 Bensen               Aud           25
+556 Shreve               Tch           30
+
+9 rows selected. 
+*/
+
+--*********************Question 3*********************************
+SELECT co.worker_id, co.last_name, co.dept_code, col.lunch_id, col.lunch_date
+FROM WORKER CO INNER JOIN LUNCH COL
+ON CO.worker_id = col.worker_id 
+WHERE TO_CHAR(col.lunch_date, 'fmMON-YYYY') = 'MAY-2020' or TO_CHAR(col.lunch_date, 'fmMON-YYYY')= 'JULY-2020'
+Order by Lunch_Date;
+--results
+/*
+
+WOR LAST_NAME            DEP   LUNCH_ID LUNCH_DAT
+--- -------------------- --- ---------- ---------
+582 Cross                Acc          5 22-MAY-20
+564 Kingman              Sal          6 22-MAY-20
+562 Armstrong            Com          4 22-MAY-20
+557 Gradle               Leg          2 22-MAY-20
+568 Young                             3 22-MAY-20
+584 Harney               Tch          1 22-MAY-20
+577 Martin               Sal         12 27-MAY-20
+573 White                Aud         11 27-MAY-20
+568 Young                            13 27-MAY-20
+559 Neal                 Srv          9 27-MAY-20
+555 Reynolds             Exe          8 27-MAY-20
+
+WOR LAST_NAME            DEP   LUNCH_ID LUNCH_DAT
+--- -------------------- --- ---------- ---------
+555 Reynolds             Exe          7 27-MAY-20
+564 Kingman              Sal         10 27-MAY-20
+
+13 rows selected. 
+
+*/
+
+--*********************Question 4A*********************************
+SELECT co.last_name, co.first_name, co.dept_code, col.lunch_date
+FROM WORKER CO INNER JOIN LUNCH COL
+ON CO.worker_id = col.worker_id
+WHERE co.dept_code = 'Leg';
+--results
+/*
+LAST_NAME            FIRST_NAME DEP LUNCH_DAT
+-------------------- ---------- --- ---------
+Gradle               Cole       Leg 22-MAY-20
+Richards             Darius     Leg 10-JUN-20
+Gradle               Cole       Leg 15-JUN-20
+
+*/
+
+--*********************Question 4B*********************************
+SELECT c.last_name, c.first_name, c.dept_code, co.lunch_date, co.lunch_id, col.item_number
+FROM WORKER C INNER JOIN LUNCH CO
+ON C.worker_id = co.worker_id
+INNER JOIN LUNCH_ITEM COL 
+ON co.lunch_id = col.lunch_id
+WHERE c.dept_code = 'Leg' ;  
+--results
+/*
+
+LAST_NAME            FIRST_NAME DEP LUNCH_DAT   LUNCH_ID ITEM_NUMBER
+-------------------- ---------- --- --------- ---------- -----------
+Gradle               Cole       Leg 22-MAY-20          2           1
+Gradle               Cole       Leg 22-MAY-20          2           2
+Gradle               Cole       Leg 22-MAY-20          2           3
+Gradle               Cole       Leg 22-MAY-20          2           4
+Gradle               Cole       Leg 15-JUN-20         35           1
+Gradle               Cole       Leg 15-JUN-20         35           2
+Richards             Darius     Leg 10-JUN-20         32           1
+Richards             Darius     Leg 10-JUN-20         32           2
+
+8 rows selected. 
+
+*/
+
+--*********************Question 4C*********************************
+
+SELECT c.last_name, c.first_name, cole.department_name, co.lunch_date, co.lunch_id, col.item_number
+FROM WORKER C INNER JOIN LUNCH CO
+ON C.worker_id = co.worker_id
+INNER JOIN LUNCH_ITEM COL 
+ON co.lunch_id = col.lunch_id
+INNER JOIN DEPARTMENT COLE
+ON cole.dept_code = c.dept_code
+WHERE c.dept_code = 'Leg' ;  
+--results
+/*
+LAST_NAME            FIRST_NAME DEPARTMENT_NAME                LUNCH_DAT   LUNCH_ID ITEM_NUMBER
+-------------------- ---------- ------------------------------ --------- ---------- -----------
+Gradle               Cole       Legal                          22-MAY-20          2           1
+Gradle               Cole       Legal                          22-MAY-20          2           2
+Gradle               Cole       Legal                          22-MAY-20          2           3
+Gradle               Cole       Legal                          22-MAY-20          2           4
+Gradle               Cole       Legal                          15-JUN-20         35           1
+Gradle               Cole       Legal                          15-JUN-20         35           2
+Richards             Darius     Legal                          10-JUN-20         32           1
+Richards             Darius     Legal                          10-JUN-20         32           2
+
+8 rows selected. 
+*/
+
+--*********************Question 5*********************************
+SELECT foods.supplier_id, supplies.supplier_name, supplies.supplier_city, COUNT(*)
+FROM FOOD_SUPPLIER SUPPLIES INNER JOIN FOOD FOODS
+ON SUPPLIES.SUPPLIER_ID = FOODS.SUPPLIER_ID
+INNER JOIN LUNCH_ITEM LUNCHITEM
+ON FOODS.PRODUCT_CODE = LUNCHITEM.PRODUCT_CODE
+AND foods.supplier_id = lunchitem.supplier_id
+GROUP BY foods.supplier_id, supplies.supplier_name, supplies.supplier_city
+HAVING COUNT(*) > 10;
+--RESULTS
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                    COUNT(*)
+--- ------------------------------ ------------------------------ ----------
+Foi Fontinas Italian               Chicago                                17
+Jd6 Justin's Deli at 601           Oak Brook                              32
+Hsd Holden Street Deli             Hinsdale                               30
+Crm Cramer Market                  Hinsdale                               24
+*/
+
+
+
+--*********************Question 6A*********************************
+
+COL TOTALPRICE FORMAT $999.99
+SELECT worker.last_name, worker.first_name, worker.dept_code, lunch.lunch_date, lunch.lunch_id, SUM(food.price*lunchitem.quantity) as TOTALPRICE
+FROM WORKER WORKER INNER JOIN LUNCH LUNCH
+ON WORKER.worker_id = LUNCH.worker_id
+INNER JOIN LUNCH_ITEM LUNCHITEM
+ON LUNCH.lunch_id = LUNCHITEM.lunch_id
+INNER JOIN FOOD FOOD
+ON LUNCHITEM.supplier_id = FOOD.supplier_id
+AND food.product_code = lunchitem.product_code
+WHERE (worker.dept_code IS NOT NULL) AND (lunch.lunch_date between '01-JUN-20' AND'30-JUN-20')
+GROUP BY worker.last_name, worker.first_name, worker.dept_code, lunch.lunch_date, lunch.lunch_id
+ORDER BY totalprice;
+--RESULTS
+/*
+LAST_NAME            FIRST_NAME DEP LUNCH_DAT   LUNCH_ID TOTALPRICE
+-------------------- ---------- --- --------- ---------- ----------
+Armstrong            Tom        Com 01-JUN-20         16   $77.80  
+Trance               Amy        Aud 01-JUN-20         17   $33.17  
+Frank                Sam        Srv 01-JUN-20         18   $42.10  
+Harney               Tyler      Tch 20-JUN-20         44   $42.05  
+Cross                Elizabeth  Tch 01-JUN-20         15   $66.93  
+Cross                Angie      Acc 15-JUN-20         41   $17.50  
+Jones                Keyanna    Tch 20-JUN-20         43   $15.50  
+Jones                Keyanna    Tch 22-JUN-20         47   $37.75  
+Gradle               Cole       Leg 15-JUN-20         35   $33.20  
+Neal                 Maia       Srv 20-JUN-20         46   $46.50  
+Frank                Sam        Srv 20-JUN-20         42   $44.05  
+
+LAST_NAME            FIRST_NAME DEP LUNCH_DAT   LUNCH_ID TOTALPRICE
+-------------------- ---------- --- --------- ---------- ----------
+Reynolds             Tracy      Exe 22-JUN-20         48   $55.80  
+Armstrong            Tom        Com 22-JUN-20         49   $77.80  
+Smith                Sean       Fin 01-JUN-20         14   $94.05  
+Harris               Denise     Hmn 15-JUN-20         37   $43.78  
+Rayner               Katelynn   Tch 15-JUN-20         38   $19.00  
+Jones                Keyanna    Tch 10-JUN-20         30   $35.85  
+Richards             Darius     Leg 10-JUN-20         32   $10.25  
+Rayner               Katelynn   Tch 15-JUN-20         34   $21.60  
+Harney               Tyler      Tch 15-JUN-20         40   $42.10  
+Reynolds             Tracy      Exe 20-JUN-20         45   $67.15  
+
+21 rows selected. 
+*/
+--*********************Question 6B*********************************
+COL TOTALPRICE FORMAT $999.99
+SELECT WORKER.last_name, WORKER.first_name, WORKER.dept_code, lunch.lunch_date, lunch.lunch_id, SUM(food.price * lunchitem.quantity + food.price_upcharge) as TOTALPRICE
+FROM WORKER WORKER INNER JOIN LUNCH LUNCH
+ON WORKER.worker_id = LUNCH.worker_id
+INNER JOIN LUNCH_ITEM LUNCHITEM
+ON LUNCH.lunch_id = LUNCHITEM.lunch_id
+INNER JOIN FOOD FOOD
+ON LUNCHITEM.supplier_id = FOOD.supplier_id
+AND food.product_code = lunchitem.product_code
+WHERE TO_CHAR(lunch.lunch_date, 'fmMON-YYYY') = 'JUN-2020' and worker.dept_code is not null
+GROUP BY worker.last_name, worker.first_name, worker.dept_code, lunch.lunch_date, lunch.lunch_id
+HAVING SUM(food.price * lunchitem.quantity + food.price_upcharge) > 15
+ORDER BY totalprice;
+--results
+/*
+LAST_NAME            FIRST_NAME DEP LUNCH_DAT   LUNCH_ID TOTALPRICE
+-------------------- ---------- --- --------- ---------- ----------
+Neal                 Maia       Srv 20-JUN-20         46   $16.15  
+Reynolds             Tracy      Exe 22-JUN-20         48   $19.00  
+Smith                Sean       Fin 01-JUN-20         14   $19.00  
+Reynolds             Tracy      Exe 20-JUN-20         45   $20.00  
+Armstrong            Tom        Com 22-JUN-20         49   $20.50  
+Armstrong            Tom        Com 01-JUN-20         16   $20.50  
+Frank                Sam        Srv 20-JUN-20         42   $23.55  
+Harris               Denise     Hmn 15-JUN-20         37   $27.65  
+
+8 rows selected. 
+*/
