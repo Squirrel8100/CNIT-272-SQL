@@ -1,0 +1,339 @@
+/*
+Logan Fish
+CNIT 27200 Spring '21
+Lab Time 2:30-3:20 Thursday
+Duration: 1 hour 10 minutes. 
+*/
+--*************************** Question 1 ***************************
+
+
+select * from food_supplier;
+
+--Results
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Ard Arnoldo Deli                   Glencoe                       
+Hsd Holden Street Deli             Hinsdale                      
+Crm Cramer Market                  Hinsdale                      
+Foi Fontinas Italian               Chicago                       
+Fas Foster and Samson              Orland Park                   
+Jd6 Justin's Deli at 601           Oak Brook                     
+Jmd Jebston Montrose Deli          Chicago                       
+Rby Rosemont Bakery                Glencoe                       
+Lss Lucias Sub Shop                Aurora                        
+Har Harper Bakery                  Hinsdale                      
+Dpz Downtowner Pizza               Chicago                       
+
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Gls Great Lakes Station            Wilmette                      
+Gio Gio and Sons                   Chicago                       
+Blu Blue Sky Deli                  Wilmette                      
+Lak Lakeshore Bakery               Chicago                       
+
+15 rows selected. 
+*/
+
+--*************************** Question 2 ***************************
+
+select FIRST_NAME, LAST_NAME, DEPT_CODE, HIRE_DATE
+FROM WORKER;
+
+--results
+/*
+
+FIRST_NAME LAST_NAME            DEP HIRE_DATE
+---------- -------------------- --- ---------
+Tracy      Reynolds             Exe 18-MAR-15
+Carole     Shreve               Tch 17-JUL-18
+Cole       Gradle               Leg 23-MAR-15
+Rita       Campbell             Hmn 24-MAY-19
+Maia       Neal                 Srv 01-APR-15
+Kevin      Ridgeman                 01-OCT-06
+Maria      Bensen               Aud 15-SEP-04
+Tom        Armstrong            Com 01-JUL-16
+Trevor     Vought               Acc 01-NOV-06
+James      Kingman              Sal 17-DEC-07
+Elizabeth  Cross                Tch 15-FEB-06
+
+FIRST_NAME LAST_NAME            DEP HIRE_DATE
+---------- -------------------- --- ---------
+Tabitha    Tevona               Hmn 21-AUG-09
+Darius     Richards             Leg 12-JAN-13
+Taylor     Young                    12-NOV-08
+Dana       Sumner               Fin 07-FEB-13
+Amy        Trance               Aud 19-JUN-18
+Denise     Harris               Hmn 28-MAR-05
+Kevin      Johnson                  11-DEC-12
+Kate       White                Aud 22-MAY-11
+Cassie     Irwin                    13-SEP-03
+Sean       Smith                Fin 19-APR-12
+Keyanna    Jones                Tch 15-MAR-19
+
+FIRST_NAME LAST_NAME            DEP HIRE_DATE
+---------- -------------------- --- ---------
+Matt       Martin               Sal 19-NOV-19
+Katelynn   Rayner               Tch 07-OCT-11
+Yvonne     Rivera                   13-NOV-15
+Roy        Gonzalez             Acc 19-DEC-11
+Brooks     Walsh                Srv 21-APR-07
+Angie      Cross                Acc 19-JUN-07
+Tonya      Montre                   07-MAR-12
+Tyler      Harney               Tch 07-MAR-18
+Sam        Frank                Srv 22-JUL-16
+Jill       Williams                 16-MAR-19
+
+32 rows selected. 
+*/
+
+--*************************** Question 3A ***************************
+
+select supplier_id, product_code, description, price
+from food
+where (price= '8' Or product_code='Br');
+
+--results
+
+/*
+
+SUP PR DESCRIPTION               PRICE
+--- -- -------------------- ----------
+Crm Br Bagel                         4
+Jmd Pz Mushroom Pizza                8
+Dpz Br Dinner Roll                   1
+Gls Br Breadstick                 1.25
+Lak Br Cheese Stick               2.35
+
+*/
+
+--*************************** Question 3B ***************************
+
+select supplier_id, product_code, description, price
+from food
+where (price= '8' Or price = '4.50' Or product_code='Br');
+
+--results
+/*
+SUP PR DESCRIPTION               PRICE
+--- -- -------------------- ----------
+Hsd Ds Velvet Cake                 4.5
+Crm Br Bagel                         4
+Foi Ds Apple Pie                   4.5
+Jmd Pz Mushroom Pizza                8
+Dpz Br Dinner Roll                   1
+Gls Br Breadstick                 1.25
+Lak Br Cheese Stick               2.35
+
+7 rows selected. 
+*/
+
+--*************************** Question 4 ***************************
+
+select supplier_name
+from food_supplier
+where (supplier_name Like '%Deli%' or supplier_name Like '%Bakery%');
+
+--results
+/*
+
+
+SUPPLIER_NAME                 
+------------------------------
+Arnoldo Deli
+Holden Street Deli
+Justin's Deli at 601
+Jebston Montrose Deli
+Rosemont Bakery
+Harper Bakery
+Blue Sky Deli
+Lakeshore Bakery
+
+8 rows selected. 
+*/
+
+--*************************** Question 5 ***************************
+
+select worker_id, last_name, hire_date, city
+from worker
+where hire_date between '01-JAN-2012' and '31-DEC-2017'; 
+
+--results
+
+/*
+
+
+WOR LAST_NAME            HIRE_DATE CITY                          
+--- -------------------- --------- ------------------------------
+555 Reynolds             18-MAR-15 Chicago                       
+557 Gradle               23-MAR-15 Wilmette                      
+559 Neal                 01-APR-15 Hinsdale                      
+562 Armstrong            01-JUL-16 Glencoe                       
+567 Richards             12-JAN-13 Oak Brook                     
+569 Sumner               07-FEB-13 Evanston                      
+572 Johnson              11-DEC-12 Hinsdale                      
+575 Smith                19-APR-12 Glencoe                       
+579 Rivera               13-NOV-15                               
+583 Montre               07-MAR-12 Aurora                        
+585 Frank                22-JUL-16 Evanston                      
+
+11 rows selected. 
+*/
+
+--*************************** Question 6A ***************************
+-- (1)
+select dept_code
+from worker;
+
+/*
+
+DEP
+---
+Exe
+Tch
+Leg
+Hmn
+Srv
+
+Aud
+Com
+Acc
+Sal
+Tch
+
+DEP
+---
+Hmn
+Leg
+
+Fin
+Aud
+Hmn
+
+Aud
+
+Fin
+Tch
+
+DEP
+---
+Sal
+Tch
+
+Acc
+Srv
+Acc
+
+Tch
+Srv
+
+
+32 rows selected. 
+*/
+
+--(2)
+select dept_code
+from department;
+
+/*
+DEP
+---
+Acc
+Aud
+Com
+Exe
+Fac
+Fin
+Hmn
+Leg
+Mkt
+Pur
+Sal
+
+DEP
+---
+Shp
+Srv
+Tch
+
+14 rows selected. 
+
+Explanation: There is not the same number in both tables because the dept_codes coming from the worker table are associated to the workers. 
+There are more workers in each dept, hence the repetitive listings of dept_codes. The codes are only listed once in the department table. 
+*/
+
+--*************************** Question 6B ***************************
+
+Select distinct dept_code
+from worker;
+
+/*
+
+DEP
+---
+Aud
+Sal
+Leg
+Hmn
+Acc
+Tch
+
+Fin
+Exe
+Com
+Srv
+
+11 rows selected. 
+
+Explanation: Even with the duplicate department codes removed the amount of depts still doesnt equal the amount in department. 
+The reasoning behind this is that there are departments that do not have workers assigned to them. Hence why the codes are not in the worker table. 
+*/
+
+--*************************** Question 7 ***************************
+
+select supplier_id, description, price AS oldprice, (price * 1.04) AS newprice
+from food 
+where supplier_id ='Lss' or supplier_id = 'Crm' or supplier_id = 'Dpz';
+
+--results
+/*
+SUP DESCRIPTION            OLDPRICE   NEWPRICE
+--- -------------------- ---------- ----------
+Crm Bagel                         4       4.16
+Crm Ham Melt                    7.2      7.488
+Crm Philly Melt                 8.6      8.944
+Crm Grilled Cheese             5.25       5.46
+Dpz Dinner Roll                   1       1.04
+Dpz Cheese Pizza                8.5       8.84
+Dpz Cheese Sauce                .75        .78
+Lss Veggie Soup                4.85      5.044
+Lss Grilled Cheese             5.95      6.188
+
+9 rows selected. 
+*/
+
+--*************************** Question 8 ***************************
+
+select worker_id, dept_code, first_name || ' ' || last_name as full_name
+from worker
+where dept_code ='Tch' or dept_code ='Leg' or dept_code ='Aud'
+Order by LAST_NAME;
+
+--results
+/*
+
+WOR DEP FULL_NAME                      
+--- --- -------------------------------
+561 Aud Maria Bensen                   
+565 Tch Elizabeth Cross                
+557 Leg Cole Gradle                    
+584 Tch Tyler Harney                   
+576 Tch Keyanna Jones                  
+578 Tch Katelynn Rayner                
+567 Leg Darius Richards                
+556 Tch Carole Shreve                  
+570 Aud Amy Trance                     
+573 Aud Kate White                     
+
+10 rows selected. 
+*/
