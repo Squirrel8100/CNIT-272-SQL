@@ -1,0 +1,548 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 3 hours
+*********************Question 1*********************************
+*/ 
+--1C
+select contactname, address, city, state, postalcode
+from supplier
+where contactname like 'Johanna Tighe';
+/*
+CONTACTNAME          ADDRESS                                  CITY                 ST POSTALCODE
+-------------------- ---------------------------------------- -------------------- -- ----------
+Johanna Tighe        7473 McCarthy Ave.                       Albany               NY 12211     
+*/
+--1D
+update supplier
+set contactname = 'Johanna Martinez', address = '489 Gregory Drive' , city =  'Grand Junction', postalcode =  '81504'
+where contactname like 'Johanna Tighe';
+/*
+1 row updated.
+*/
+--1E
+select contactname, address, city, state, postalcode
+from supplier
+where contactname like 'Johanna Martinez';
+/*
+CONTACTNAME          ADDRESS                                  CITY                 ST POSTALCODE
+-------------------- ---------------------------------------- -------------------- -- ----------
+Johanna Martinez     489 Gregory Drive                        Grand Junction       NY 81504     
+*/
+--1F
+COMMIT;
+/*
+Commit complete.
+*/
+--*********************Question 2*********************************
+--2A
+SET LINESPACE 200;
+select shipperid,shippername,contactname,phone
+from shipper;
+/*
+ SHIPPERID SHIPPERNAME               CONTACTNAME          PHONE       
+---------- ------------------------- -------------------- ------------
+         1 Argen Shipping            Tim Mantel           503-696-9000
+         2 Channel Express           Gloria Trackner      303-434-8000
+         3 Federal Express           Michael Emilson      517-486-4643
+         4 U.S. Postal Service       Suzanne Carroll      919-486-4745
+         5 Shipping Experts          Greg Hemmel          972-848-8396
+         6 Next Day Air              Lana Brown           972-747-0747
+         7 United Parcel Service     Julia Rosewill       471-774-2527
+         8 Mail Hub                  Christine Roush      305-267-9966
+         9 Bike Courier              Trevor Burke         972-534-9433
+        10 Mobile Runner             Robert Andrews       972-434-2640
+        11 California Air Express    Tyler Stevens        415-763-8694
+
+ SHIPPERID SHIPPERNAME               CONTACTNAME          PHONE       
+---------- ------------------------- -------------------- ------------
+        12 Global Carrier            Rita Hyatt           503-309-6547
+
+12 rows selected. 
+*/
+--2B
+INSERT INTO SHIPPER VALUES (13, 'Milky Express', 'Sam Jackson', '304-234-2000', 'SJackson@chexpress.com', '323-634-6800', 100, 7.45);
+INSERT INTO SHIPPER VALUES (14, 'Choccy Express', 'Max Mackner', '378-654-4000', 'MaxMackner@chexpress.com', '273-753-3560', 100, 8.65);
+/*
+
+1 row inserted.
+
+
+1 row inserted.
+*/
+--c
+set linespace 200
+select *
+from shipper;
+--2D
+/*
+ SHIPPERID SHIPPERNAME               CONTACTNAME          PHONE        EMAILADDR                                          FAX          MAXPACKAGEWEIGHT FREIGHTPERLB
+---------- ------------------------- -------------------- ------------ -------------------------------------------------- ------------ ---------------- ------------
+        13 Milky Express             Sam Jackson          304-234-2000 SJackson@chexpress.com                             323-634-6800              100         7.45
+        14 Choccy Express            Max Mackner          378-654-4000 MaxMackner@chexpress.com                           273-753-3560              100         8.65
+         1 Argen Shipping            Tim Mantel           503-696-9000 tmantel@argen.com                                  503-696-3923              100         9.38
+         2 Channel Express           Gloria Trackner      303-434-8000 gtrackner@chexpress.com                            303-434-6500              100         6.45
+         3 Federal Express           Michael Emilson      517-486-4643 emike@fedex.com                                    517-486-4381              150        11.26
+         4 U.S. Postal Service       Suzanne Carroll      919-486-4745 suzyc@usps.gov                                     919-486-6593               85         6.25
+         5 Shipping Experts          Greg Hemmel          972-848-8396 ghemmel@shipex.com                                 972-848-4774              200         7.47
+         6 Next Day Air              Lana Brown           972-747-0747 lanab@nda.com                                      972-747-7091              250        11.89
+         7 United Parcel Service     Julia Rosewill       471-774-2527 juliar@ups.com                                     471-774-0077              175         8.38
+         8 Mail Hub                  Christine Roush      305-267-9966 croush@mailhub.com                                 305-267-3443              200        11.44
+         9 Bike Courier              Trevor Burke         972-534-9433 tburke@bikec.com                                   972-534-7438               25         7.55
+
+ SHIPPERID SHIPPERNAME               CONTACTNAME          PHONE        EMAILADDR                                          FAX          MAXPACKAGEWEIGHT FREIGHTPERLB
+---------- ------------------------- -------------------- ------------ -------------------------------------------------- ------------ ---------------- ------------
+        10 Mobile Runner             Robert Andrews       972-434-2640 randrews@mobrun.com                                972-434-1415               75          5.5
+        11 California Air Express    Tyler Stevens        415-763-8694 tstevens@calairx.com                               415-763-5454              200        12.58
+        12 Global Carrier            Rita Hyatt           503-309-6547 ritah@glocarrier.com                               503-309-3437               75         8.55
+
+14 rows selected. 
+*/
+--2E
+COMMIT;
+/*
+Commit complete.
+*/
+--*********************Question 3*********************************
+--3A
+SELECT COUNT(CATEGORYID)
+FROM INVENTORYPART
+WHERE CATEGORYID = 'CBL';
+/*
+COUNT(CATEGORYID)
+-----------------
+               36
+            
+*/
+--3B
+UPDATE INVENTORYPART
+SET CATEGORYID = NULL
+WHERE CATEGORYID LIKE 'CBL';
+/*
+36 rows updated.
+*/
+--3C
+SELECT COUNT(CATEGORYID)
+FROM INVENTORYPART
+WHERE CATEGORYID = 'CBL';
+/*
+COUNT(CATEGORYID)
+-----------------
+                0
+*/
+--3D
+SELECT COUNT(*)
+FROM INVENTORYPART
+WHERE CATEGORYID IS NULL;
+/*
+
+  COUNT(*)
+----------
+        68
+*/
+--3E
+ROLLBACK;
+/*
+Rollback complete.
+*/
+
+--3F
+SELECT COUNT(CATEGORYID)
+FROM INVENTORYPART
+WHERE CATEGORYID = 'CBL';
+/*
+COUNT(CATEGORYID)
+-----------------
+               36
+               */
+
+--3G
+UPDATE INVENTORYPART
+SET CATEGORYID = NULL
+WHERE CATEGORYID LIKE 'CBL';
+/*
+
+COUNT(CATEGORYID)
+-----------------
+               36
+
+
+36 rows updated.
+*/
+--3H
+COMMIT;
+/*
+Commit complete.
+*/
+--3I
+DELETE FROM CATEGORY
+WHERE categoryid = 'CBL';
+/*
+1 row deleted.
+*/
+--3J
+COMMIT;
+/*
+Commit complete.
+*/
+--3K
+SELECT *
+FROM CATEGORY;
+/*
+CATEGORYID CATEGORYNAME                   DESCRIPTION                                                                                         
+---------- ------------------------------ ----------------------------------------------------------------------------------------------------
+ACS        Accessories                    Scanners, Printers, Cameras                                                                         
+BASE       Basics                         Casing, Barebone, Monitors, Mice                                                                    
+KEY        Keyboards                      Ergonomic, QWERTY, Wireless                                                                         
+BAT        Batteries                      Laptop Battery, Battery Charger                                                                     
+BLU        Bluetooth                      Speakers                                                                                            
+COMP       Computers                      Assembled Computers                                                                                 
+FIT        Fitness                        Fitness Trackers, Health Monitoring                                                                 
+NET        Networking                     Switches, Wireless, Routers                                                                         
+PORT       Ports                          USB, Adapter, DisplayPort                                                                           
+POW        Power                          Power Supplies                                                                                      
+PROC       Processors                     Ryzen, Athlon, Pentium, Core, Xeon, Fans                                                            
+
+CATEGORYID CATEGORYNAME                   DESCRIPTION                                                                                         
+---------- ------------------------------ ----------------------------------------------------------------------------------------------------
+SFTW       Software                       Games, Productivity, Accounting, Maps                                                               
+STOR       Storage                        DVD, Hard Drives, Memory                                                                            
+TAB        Tablets                        Mobile Computers                                                                                    
+HOME       Monitoring                     Home Security Systems                                                                               
+
+15 rows selected. 
+*/
+--*********************Question 4*********************************
+--4A
+Insert into EMPLOYEE values ('251180', 'Fish', 'Logan'   , 'Engineer', '29 Tower Dr.', 'West Lafayette', 'IN', '47906', '574-850-3472', 'Y', '6-MAY-2021', null, 'Permanent', null, null , '13-FEB-1970', null , null, 'Fishl@pencomp.com', 25);
+/*
+1 row inserted.
+*/
+--4B-4D
+Insert into PACKINGSLIP values ('M160', 1, '251180', '07-JUL-2021');                                  
+Insert into PACKINGSLIP values ('M161', 1, '251180', '07-JUL-2021');                                  
+/*
+1 row inserted.
+
+
+1 row inserted.
+*/
+--4E
+SELECT employee.employeeid, employee.lastname, slip.packagenumber, slip.shippeddate, slip.shipmentid, ship.orderid
+FROM PACKINGSLIP SLIP INNER JOIN EMPLOYEE EMPLOYEE
+ON EMPLOYEE.EMPLOYEEID = SLIP.EMPLOYEEID
+INNER JOIN SHIPMENT SHIP
+ON SHIP.SHIPMENTID = SLIP.SHIPMENTID
+AND EMPLOYEE.EMPLOYEEID = SLIP.EMPLOYEEID
+WHERE EMPLOYEE.EMPLOYEEID = 251180;
+/*
+EMPLOYEEID LASTNAME             PACKAGENUMBER SHIPPEDDA SHIPMENTID ORDERID   
+---------- -------------------- ------------- --------- ---------- ----------
+251180     Fish                             1 07-JUL-21 M160       3001000799
+251180     Fish                             1 07-JUL-21 M161       3001000803
+*/
+--4F
+COMMIT;
+/*
+Commit complete.
+*/
+--*********************Question 5*********************************
+--5A
+SELECT COUNT(*)
+FROM TIMECARDLINE;
+/*
+  COUNT(*)
+----------
+         0
+
+*/
+
+--5B
+SELECT EMPLOYEEID, SALARYWAGE
+FROM EMPLOYEE
+WHERE JOBTITLE LIKE 'Engineer';
+/*
+(************************
+This comes back with 6 instead of 5
+because i gave the earlier made employee the
+title of Engineer))
+**************************
+EMPLOYEEID SALARYWAGE
+---------- ----------
+250104          88500
+250200          76100
+250209          82200
+250559          80100
+250944          98600
+251180             25
+
+6 rows selected. 
+*/
+--5C
+INSERT INTO TIMECARDLINE 
+SELECT EmployeeID, add_months(TRUNC(sysdate)-2, 2), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+FROM EMPLOYEE
+WHERE JOBTITLE LIKE 'Engineer';
+-- ONCE AGAIN 6 ROWS BECAUSE THE NEW EMPLOYEE I MADE
+--IS AN ENGINEER
+/*
+6 rows inserted.
+*/
+--5D
+SELECT EMPLOYEEID, TO_CHAR(DATETIMESTART, 'fmMonth DDth , YYYY, Day') as TIMECARD, SYSDATE
+FROM TIMECARDLINE;
+/*
+EMPLOYEEID TIMECARD                         SYSDATE  
+---------- -------------------------------- ---------
+250104     February 6TH , 2021, Saturday    06-APR-21
+250200     February 6TH , 2021, Saturday    06-APR-21
+250209     February 6TH , 2021, Saturday    06-APR-21
+250559     February 6TH , 2021, Saturday    06-APR-21
+250944     February 6TH , 2021, Saturday    06-APR-21
+251180     February 6TH , 2021, Saturday    06-APR-21
+
+6 rows selected. 
+*/
+--5E
+ROLLBACK;
+/*
+Rollback complete.
+*/
+SELECT COUNT(*)
+FROM TIMECARDLINE;
+/*
+ COUNT(*)
+----------
+         0
+*/
+--5F
+INSERT INTO TIMECARDLINE VALUES (251135, TO_DATE('01-31-2021','MM-DD-YYYY'),NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO TIMECARDLINE VALUES (251154, TO_DATE('01-31-2021','MM-DD-YYYY'),NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO TIMECARDLINE VALUES (251167, TO_DATE('01-31-2021','MM-DD-YYYY'),NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+/*
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+*/
+--5G
+SELECT EMPLOYEEID, DATETIMESTART, SYSDATE
+FROM TIMECARDLINE;
+/*
+EMPLOYEEID DATETIMES SYSDATE  
+---------- --------- ---------
+251135     31-JAN-21 06-APR-21
+251154     31-JAN-21 06-APR-21
+251167     31-JAN-21 06-APR-21
+*/
+--*********************Question 6*********************************
+--6A
+select shipperid, shippername, maxpackageweight
+from shipper;
+/*
+ SHIPPERID SHIPPERNAME               MAXPACKAGEWEIGHT
+---------- ------------------------- ----------------
+         1 Argen Shipping                         100
+         2 Channel Express                        100
+         3 Federal Express                        150
+         4 U.S. Postal Service                     85
+         5 Shipping Experts                       200
+         6 Next Day Air                           250
+         7 United Parcel Service                  175
+         8 Mail Hub                               200
+         9 Bike Courier                            25
+        10 Mobile Runner                           75
+        11 California Air Express                 200
+
+ SHIPPERID SHIPPERNAME               MAXPACKAGEWEIGHT
+---------- ------------------------- ----------------
+        12 Global Carrier                          75
+
+12 rows selected. 
+*/
+update shipper
+set MAXPACKAGEWEIGHT = (MAXPACKAGEWEIGHT + 45.00)
+where MAXPACKAGEWEIGHT > (SELECT avg(MAXPACKAGEWEIGHT) FROM SHIPPER);
+/*
+6 rows updated.
+*/
+select shipperid, shippername, maxpackageweight
+from shipper;
+/*
+ SHIPPERID SHIPPERNAME               MAXPACKAGEWEIGHT
+---------- ------------------------- ----------------
+         1 Argen Shipping                         100
+         2 Channel Express                        100
+         3 Federal Express                        195
+         4 U.S. Postal Service                     85
+         5 Shipping Experts                       245
+         6 Next Day Air                           295
+         7 United Parcel Service                  220
+         8 Mail Hub                               245
+         9 Bike Courier                            25
+        10 Mobile Runner                           75
+        11 California Air Express                 245
+
+ SHIPPERID SHIPPERNAME               MAXPACKAGEWEIGHT
+---------- ------------------------- ----------------
+        12 Global Carrier                          75
+
+12 rows selected. 
+*/
+COMMIT;
+/*
+Commit complete.
+*/
+--*********************Question 7*********************************
+SELECT *
+FROM CUSTOMER
+WHERE CUSTOMERID LIKE 'I-200063';
+/*
+CUSTOMERID COMPANYNAME                              CUSTFIRSTNAME   CUSTLASTNAME         CUSTT ADDRESS                                  CITY                 ST POSTALCODE PHONE        CELLPHONE    EMAILADDR                                         
+---------- ---------------------------------------- --------------- -------------------- ----- ---------------------------------------- -------------------- -- ---------- ------------ ------------ --------------------------------------------------
+I-200063                                            Dennis          Eberle               Mr.   9425 James Rd.                           Carson City          NV 89721      887-708-1802              deber@yahoo.com                                   
+*/
+SELECT CUSTOMERID, ORDERID 
+FROM CUSTORDER
+WHERE CUSTOMERID LIKE 'I-200063';
+/*
+CUSTOMERID ORDERID   
+---------- ----------
+I-200063   3001000662
+I-200063   3000000204
+I-200063   3000000471
+I-200063   3001000551
+*/
+
+SELECT ORDERID
+FROM CUSTORDERLINE
+WHERE ORDERID IN('3001000662','3000000204','3000000471','3001000551');
+/*
+ORDERID   
+----------
+3000000204
+3000000204
+3000000471
+3000000471
+3000000471
+3001000551
+3001000551
+3001000551
+3001000662
+3001000662
+3001000662
+
+ORDERID   
+----------
+3001000662
+
+12 rows selected. 
+*/
+
+SELECT SHIPMENTID, ORDERID
+FROM SHIPMENT
+WHERE ORDERID IN('3001000662','3000000204','3000000471','3001000551');
+/*
+SHIPMENTID ORDERID   
+---------- ----------
+H253       3000000471
+M041       3000000204
+M102       3001000551
+M127       3001000662
+*/
+
+SELECT ORDERID
+FROM SHIPPEDITEM
+WHERE ORDERID IN('3001000662','3000000204','3000000471','3001000551');
+/*
+ORDERID   
+----------
+3000000204
+3000000204
+3000000471
+3000000471
+3000000471
+3001000551
+3001000551
+3001000551
+3001000662
+3001000662
+3001000662
+
+ORDERID   
+----------
+3001000662
+
+12 rows selected. 
+*/
+
+SELECT SHIPMENTID
+FROM PACKINGSLIP
+WHERE SHIPMENTID IN('H253','M041', 'M102','M127');
+/*
+SHIPMENTID
+----------
+H253
+M041
+M102
+M127
+*/
+
+DELETE FROM SHIPPEDITEM
+WHERE ORDERID IN('3001000662','3000000204','3000000471','3001000551');
+/*
+12 rows deleted.
+*/
+DELETE FROM PACKINGSLIP
+WHERE SHIPMENTID IN('H253','M041', 'M102','M127');
+/*
+4 rows deleted.
+*/
+DELETE FROM SHIPMENT
+WHERE ORDERID IN('3001000662','3000000204','3000000471','3001000551');
+/*
+4 rows deleted.
+*/
+DELETE FROM CUSTORDERLINE
+WHERE ORDERID IN ('3001000662','3000000204','3000000471','3001000551');
+/*
+12 rows deleted.
+*/
+DELETE FROM CUSTORDER
+WHERE ORDERID IN ('3001000662','3000000204','3000000471','3001000551');
+/*
+4 rows deleted.
+*/
+DELETE FROM CUSTOMER
+WHERE CUSTOMERID LIKE 'I-200063';
+/*
+1 row deleted.
+*/
+COMMIT;
+/*
+Commit complete.
+*/
+
+--*********************Question 8*********************************
+SELECT USER, SYSTIMESTAMP
+FROM DUAL;
+/*
+USER                                                                                                                             SYSTIMESTAMP                          
+-------------------------------------------------------------------------------------------------------------------------------- --------------------------------------
+FISHL                                                                                                                            07-APR-21 05.15.42.138557000 PM -04:00
+*/
+--*********************Question 9*********************************
+--A commit saves the current database as a current revision, where a rollback
+--returns to the last saved database revision. 
+--*********************Question 10********************************
+--an employee id could be added to packingslip, however there would be issues 
+--with relationships and constraints already exsistance that were formed based off the the tables relations
+--an employeeid would have to be inherited to other tables to allow for it to be stable. 
+--*********************Question 11********************************
+--some limitations when updating a record are constraints where some values cannot be null, some tables are dependent
+--on other tables, which causes issues when trying to update one table thats inheriting the data. In that case the data needs to be
+--changed from the parent before the child.

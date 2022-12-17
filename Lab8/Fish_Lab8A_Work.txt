@@ -1,0 +1,469 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: about 4 hours
+*********************Question 1*********************************
+*/ 
+--1. 
+SELECT WORKER_ID
+FROM WORKER
+WHERE WORKER_ID LIKE '588';
+/*
+no rows selected
+*/
+--2. 
+set feedback on;
+insert into worker values
+  (588, 'Maia', 'Jackson', 'Evanston', 'Tch', to_date('Jan-30-2021', 'mm-dd-yyyy'), 30, '7592', 565);
+/*
+1 row inserted.
+*/
+--3.
+SELECT worker_id, first_name, last_name, city, dept_code, hire_date, credit_limit, phone_number, manager_id
+FROM WORKER
+WHERE WORKER_ID LIKE '588';
+/*
+
+WOR FIRST_NAME LAST_NAME            CITY                           DEP HIRE_DATE CREDIT_LIMIT PHON MAN
+--- ---------- -------------------- ------------------------------ --- --------- ------------ ---- ---
+588 Maia       Jackson              Evanston                       Tch 30-JAN-21           30 7592 565
+
+1 row selected. 
+*/
+--4.
+SELECT WORKER_ID
+FROM LUNCH
+WHERE WORKER_ID LIKE '588';
+/*
+
+0 rows selected. 
+*/
+--5. 
+insert into lunch values (50, '02-Feb-21', 588);
+insert into lunch values (51, '04-Feb-21', 588);
+/*
+1 row inserted.
+
+1 row inserted.
+*/
+--3 Create your own lunch order for the new worker. 
+insert into lunch values (52, '01-Apr-21', 588);
+/*
+1 row inserted.
+*/
+--4. 
+SELECT WORKER_ID
+FROM LUNCH
+WHERE WORKER_ID LIKE '588';
+/*
+WOR
+---
+588
+588
+588
+
+3 rows selected. 
+*/
+--5. 
+insert into lunch_item values (50, 5, 'Jd6', 'Ds', 1);
+insert into lunch_item values (50, 2, 'Hsd', 'Sp', 2);
+
+insert into lunch_item values (51, 3, 'Crm', 'Ps', 1);
+insert into lunch_item values (51, 5, 'Jd6', 'Ds', 2);
+
+insert into lunch_item values (52, 2, 'Hsd', 'Sp', 1);
+insert into lunch_item values (52, 3, 'Crm', 'Hb', 1);
+/*Condensed result
+1 row inserted.
+1 row inserted.
+1 row inserted.
+1 row inserted.
+1 row inserted.
+1 row inserted.
+*/
+SELECT lunch.worker_id, lunch.lunch_id, lunch.lunch_date, lunchitem.item_number, lunchitem.supplier_id, lunchitem.quantity
+FROM LUNCH LUNCH INNER JOIN LUNCH_ITEM LUNCHITEM
+ON lunch.lunch_id = lunchitem.lunch_id
+WHERE WORKER_ID LIKE '588';
+/*
+WOR   LUNCH_ID LUNCH_DAT ITEM_NUMBER SUP   QUANTITY
+--- ---------- --------- ----------- --- ----------
+588         50 02-FEB-21           5 Jd6          1
+588         50 02-FEB-21           2 Hsd          2
+588         51 04-FEB-21           5 Jd6          2
+588         52 01-APR-21           2 Hsd          1
+588         52 01-APR-21           3 Crm          1
+588         51 04-FEB-21           3 Crm          1
+
+6 rows selected. 
+*/
+commit;
+/*
+Commit complete.
+*/
+--*********************Question 2*********************************
+SELECT SUPPLIER_ID, SUPPLIER_NAME, SUPPLIER_CITY
+FROM FOOD_SUPPLIER
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Jmd Jebston Montrose Deli          Chicago                       
+
+1 row selected. 
+*/
+--2.
+UPDATE food_supplier SET supplier_name = 'Jordan Market Deli',supplier_city = 'Glencoe';
+/*
+15 rows updated.
+*/
+--3. 
+COMMIT;
+/*
+Commit complete.
+*/
+--4. 
+SELECT SUPPLIER_ID, SUPPLIER_NAME, SUPPLIER_CITY
+FROM FOOD_SUPPLIER
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Jmd Jordan Market Deli             Glencoe                       
+
+1 row selected. 
+*/
+--*********************Question 3*********************************
+SELECT SUPPLIER_ID, DESCRIPTION, PRICE
+FROM food
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP DESCRIPTION               PRICE
+--- -------------------- ----------
+Jmd Potato Soup                6.25
+Jmd Iced Tea                   2.85
+Jmd Cole Slaw                   1.5
+Jmd Mushroom Pizza                8
+
+4 rows selected. 
+*/
+
+UPDATE FOOD 
+SET PRICE = (1.5 * price)
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+4 rows updated.
+*/
+--3.
+SELECT SUPPLIER_ID, DESCRIPTION, PRICE
+FROM food
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP DESCRIPTION               PRICE
+--- -------------------- ----------
+Jmd Potato Soup                9.38
+Jmd Iced Tea                   4.28
+Jmd Cole Slaw                  2.25
+Jmd Mushroom Pizza               12
+
+4 rows selected. 
+
+4 rows selected. 
+*/
+--*********************Question 4*********************************
+select food.supplier_id,food.product_code
+from food food left join lunch_item lunchitem
+on food.product_code = lunchitem.product_code
+and food.supplier_id = lunchitem.supplier_id
+where lunchitem.supplier_id is null;
+/*
+
+SUP PR
+--- --
+Gls Vr
+Jmd Vt
+
+2 rows selected. 
+*/
+DELETE FROM FOOD
+WHERE SUPPLIER_ID || product_code IN (select food.supplier_id || food.product_code
+from food food left join lunch_item lunchitem
+on food.product_code = lunchitem.product_code
+and food.supplier_id = lunchitem.supplier_id
+where lunchitem.supplier_id is null);
+/*
+2 rows deleted.
+*/
+select food.supplier_id,food.product_code
+from food food left join lunch_item lunchitem
+on food.product_code = lunchitem.product_code
+and food.supplier_id = lunchitem.supplier_id
+where lunchitem.supplier_id is null;
+/*
+0 rows selected. 
+*/
+SELECT SUPPLIER_ID, PRODUCT_CODE, DESCRIPTION
+FROM FOOD;
+/*
+SUP PR DESCRIPTION         
+--- -- --------------------
+Ard Pz Sausage Pizza       
+Hsd Cs Chef Salad          
+Hsd Sp Chicken Soup        
+Hsd Ds Velvet Cake         
+Hsd Pp Protein Plate       
+Crm Sw Grilled Cheese      
+Crm Ps Philly Melt         
+Crm Hb Ham Melt            
+Crm Br Bagel               
+Foi Vt Broccoli Salad      
+Foi Ff French Fries        
+
+SUP PR DESCRIPTION         
+--- -- --------------------
+Foi Sp Barley Soup         
+Foi Ds Apple Pie           
+Jd6 Vr Soda                
+Jd6 Cf Coffee              
+Jd6 Ds Brownie             
+Jmd Sp Potato Soup         
+Jmd Vr Iced Tea            
+Jmd Pz Mushroom Pizza      
+Lss Sw Grilled Cheese      
+Lss Sp Veggie Soup         
+Dpz Pz Cheese Pizza        
+
+SUP PR DESCRIPTION         
+--- -- --------------------
+Dpz Br Dinner Roll         
+Dpz Sc Cheese Sauce        
+Gls Ds Sugar Cookie        
+Gls Br Breadstick          
+Blu Sw Turkey Club         
+Blu Cp Chips               
+Lak Sw Caprese             
+Lak Sd Spinach Salad       
+Lak Br Cheese Stick        
+
+31 rows selected. 
+*/
+--*********************Question 5*********************************
+SELECT foodsupplier.SUPPLIER_ID,foodsupplier.SUPPLIER_NAME
+FROM FOOD FOOD right join food_supplier foodsupplier
+on foodsupplier.supplier_id = food.supplier_id
+where food.supplier_id is null;
+/*
+SUP SUPPLIER_NAME                 
+--- ------------------------------
+Fas Jordan Market Deli            
+Rby Jordan Market Deli            
+Har Jordan Market Deli            
+Gio Jordan Market Deli            
+
+4 rows selected. 
+*/
+DELETE FROM FOOD_SUPPLIER
+WHERE SUPPLIER_ID NOT IN (select food.supplier_id 
+FROM FOOD FOOD right join food_supplier foodsupplier
+on foodsupplier.supplier_id = food.supplier_id
+where food.supplier_id is not null);
+/*
+4 rows deleted.
+*/
+SELECT foodsupplier.SUPPLIER_ID,foodsupplier.SUPPLIER_NAME
+FROM FOOD FOOD right join food_supplier foodsupplier
+on foodsupplier.supplier_id = food.supplier_id
+where food.supplier_id is null;
+/*
+0 rows selected. 
+*/
+SELECT SUPPLIER_ID, SUPPLIER_NAME, SUPPLIER_CITY
+FROM FOOD_SUPPLIER;
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Ard Jordan Market Deli             Glencoe                       
+Hsd Jordan Market Deli             Glencoe                       
+Crm Jordan Market Deli             Glencoe                       
+Foi Jordan Market Deli             Glencoe                       
+Jd6 Jordan Market Deli             Glencoe                       
+Jmd Jordan Market Deli             Glencoe                       
+Lss Jordan Market Deli             Glencoe                       
+Dpz Jordan Market Deli             Glencoe                       
+Gls Jordan Market Deli             Glencoe                       
+Blu Jordan Market Deli             Glencoe                       
+Lak Jordan Market Deli             Glencoe                       
+
+11 rows selected. 
+*/
+ROLLBACK;
+/*
+Rollback complete.
+*/
+--*********************Question 6 VERIFICATION*********************************
+
+SELECT SUPPLIER_ID
+FROM FOOD_SUPPLIER;
+/*
+SUP
+---
+Ard
+Blu
+Crm
+Dpz
+Fas
+Foi
+Gio
+Gls
+Har
+Hsd
+Jd6
+
+SUP
+---
+Jmd
+Lak
+Lss
+Rby
+
+15 rows selected. 
+*/
+select food.supplier_id,food.product_code
+from food food left join lunch_item lunchitem
+on food.product_code = lunchitem.product_code
+and food.supplier_id = lunchitem.supplier_id
+where lunchitem.supplier_id is null;
+/*
+SUP PR
+--- --
+Gls Vr
+Jmd Vt
+
+2 rows selected. 
+*/
+SELECT SUPPLIER_ID, DESCRIPTION, PRICE
+FROM food
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP DESCRIPTION               PRICE
+--- -------------------- ----------
+Jmd Potato Soup                6.25
+Jmd Iced Tea                   2.85
+Jmd Cole Slaw                   1.5
+Jmd Mushroom Pizza                8
+
+4 rows selected. 
+*/
+SELECT SUPPLIER_ID, SUPPLIER_NAME, SUPPLIER_CITY
+FROM FOOD_SUPPLIER
+WHERE SUPPLIER_ID LIKE 'Jmd';
+/*
+SUP SUPPLIER_NAME                  SUPPLIER_CITY                 
+--- ------------------------------ ------------------------------
+Jmd Jordan Market Deli             Glencoe                       
+
+1 row selected. 
+*/
+SELECT worker_id, first_name, last_name, city, dept_code, hire_date, credit_limit, phone_number, manager_id
+FROM WORKER
+WHERE WORKER_ID LIKE '588';
+/*
+WOR FIRST_NAME LAST_NAME            CITY                           DEP HIRE_DATE CREDIT_LIMIT PHON MAN
+--- ---------- -------------------- ------------------------------ --- --------- ------------ ---- ---
+588 Maia       Jackson              Evanston                       Tch 30-JAN-21           30 7592 565
+
+1 row selected. 
+*/
+SELECT WORKER_ID
+FROM LUNCH
+WHERE WORKER_ID LIKE '588';
+/*
+WOR
+---
+588
+588
+588
+
+3 rows selected. 
+*/
+SELECT lunch.worker_id, lunch.lunch_id, lunch.lunch_date, lunchitem.item_number, lunchitem.supplier_id, lunchitem.quantity
+FROM LUNCH LUNCH INNER JOIN LUNCH_ITEM LUNCHITEM
+ON lunch.lunch_id = lunchitem.lunch_id
+WHERE WORKER_ID LIKE '588';
+/*
+WOR   LUNCH_ID LUNCH_DAT ITEM_NUMBER SUP   QUANTITY
+--- ---------- --------- ----------- --- ----------
+588         50 02-FEB-21           5 Jd6          1
+588         50 02-FEB-21           2 Hsd          2
+588         51 04-FEB-21           3 Crm          1
+588         51 04-FEB-21           5 Jd6          2
+588         52 01-APR-21           2 Hsd          1
+588         52 01-APR-21           3 Crm          1
+
+6 rows selected. 
+*/
+--*********************Question 7*********************************
+DROP TABLE TRAVEL;
+CREATE TABLE TRAVEL
+(WORKER_ID char(3) CONSTRAINT TRAVEL_PK PRIMARY KEY, 
+DEPT_CODE VARCHAR2(3),
+TRAVEL_LIMIT  NUMBER(4,2),
+AUTHORIZAION CHAR(2));
+/*
+Table TRAVEL created.
+*/
+ALTER TABLE TRAVEL
+ADD CONSTRAINT TRAVEL_FK FOREIGN KEY (WORKER_ID) REFERENCES WORKER (WORKER_ID);
+/*
+Table TRAVEL altered.
+*/
+INSERT INTO TRAVEL 
+SELECT worker_id, dept_code, (credit_limit + credit_limit * .25), NULL
+FROM WORKER
+WHERE MANAGER_ID LIKE '555';
+/*
+9 rows inserted.
+*/
+SELECT *
+FROM TRAVEL;
+/*
+WOR DEP TRAVEL_LIMIT AU
+--- --- ------------ --
+556 Tch         37.5   
+557 Leg           35   
+558 Hmn         37.5   
+559 Srv         32.5   
+561 Aud        31.25   
+563 Acc         37.5   
+564 Sal        41.25   
+569 Fin           35   
+579            28.75   
+
+9 rows selected. 
+*/
+UPDATE TRAVEL 
+SET AUTHORIZAION = 'A7'
+WHERE AUTHORIZAION IS NULL;
+/*
+9 rows updated.
+*/
+SELECT work.worker_id, work.dept_code, work.credit_limit, travel.travel_limit, travel.authorizaion
+FROM WORKER WORK INNER JOIN TRAVEL TRAVEL
+ON work.worker_id = travel.worker_id;
+/*
+WOR DEP CREDIT_LIMIT TRAVEL_LIMIT AU
+--- --- ------------ ------------ --
+556 Tch           30         37.5 A7
+557 Leg           28           35 A7
+558 Hmn           30         37.5 A7
+559 Srv           26         32.5 A7
+561 Aud           25        31.25 A7
+563 Acc           30         37.5 A7
+564 Sal           33        41.25 A7
+569 Fin           28           35 A7
+579               23        28.75 A7
+
+9 rows selected. 
+*/
+COMMIT;
