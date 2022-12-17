@@ -1,0 +1,273 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 
+*********************Question 1*********************************
+*/ 
+--2AB
+DROP TABLE S21FURNITURE;
+/*
+Error report -
+ORA-00942: table or view does not exist
+00942. 00000 -  "table or view does not exist"
+*/
+CREATE TABLE S21FURNITURE
+(FURNITURECODE char(8) CONSTRAINT S21FURNITURE_PK PRIMARY KEY,
+DESCRIPTION VARCHAR2(30) NOT NULL, TYPE VARCHAR2(10), WEIGHT NUMBER(4,2) NOT NULL);
+/*
+Table S21FURNITURE created.
+*/
+--2C
+DESC S21FURNITURE;
+/*
+Name          Null?    Type         
+------------- -------- ------------ 
+FURNTURECODE NOT NULL CHAR(8)      
+DESCRIPTION   NOT NULL VARCHAR2(30) 
+TYPE                   VARCHAR2(10) 
+WEIGHT        NOT NULL NUMBER(4,2)  
+*/
+
+--*********************Question 1*********************************
+--2A
+DROP TABLE S21INVENTORY;
+/*
+Table S21INVENTORY dropped.
+*/
+CREATE TABLE S21INVENTORY
+(INVENTORYID char(10) CONSTRAINT S21INVENTORY_PK PRIMARY KEY,
+INVENTORYDATE DATE NOT NULL, ROOMNUM CHAR(4)NOT NULL, STAFFID CHAR(9), ROOMCONDITION VARCHAR2(20), TEMPERATURE NUMBER(3,1), 
+CONSTRAINT S21ROOM_FK FOREIGN KEY (ROOMNUM) REFERENCES S21ROOM (ROOMNUM));
+/*
+Table S21INVENTORY created.
+*/
+--2B
+DESC S21INVENTORY;
+/*
+Name          Null?    Type         
+------------- -------- ------------ 
+INVENTORYID   NOT NULL CHAR(10)     
+INVENTORYDATE NOT NULL DATE         
+ROOMNUM       NOT NULL CHAR(4)      
+STAFFID                CHAR(9)      
+ROOMCONDITION           VARCHAR2(20) 
+TEMPERATURE            NUMBER(3,1)  
+*/
+--2C
+ALTER TABLE S21INVENTORY
+MODIFY ROOMCONDITION VARCHAR2(50);
+/*
+Table S21INVENTORY altered.
+*/
+--2D
+ALTER TABLE S21INVENTORY 
+DROP COLUMN TEMPERATURE;
+/*
+Table S21INVENTORY altered.
+*/
+
+--2E
+DESC S21INVENTORY;
+/*
+Name          Null?    Type         
+------------- -------- ------------ 
+INVENTORYID   NOT NULL CHAR(10)     
+INVENTORYDATE NOT NULL DATE         
+ROOMNUM       NOT NULL CHAR(4)      
+STAFFID                CHAR(9)      
+ROOMCONDITION          VARCHAR2(50) 
+*/
+
+--*********************Question 3*********************************
+--1A
+DROP TABLE S21INVENTORYDETAIL;
+CREATE TABLE S21INVENTORYDETAIL
+(INVENTORYID char(10), 
+FURNITURECODE CHAR(8),
+QUANTITY NUMBER(2),
+CONDITION VARCHAR2(9), 
+LOCATION VARCHAR2(30) NOT NULL,
+COMMENTS VARCHAR2(30), 
+CONSTRAINT S21INVENTORYDETAIL_PK PRIMARY KEY (INVENTORYID, FURNITURECODE),
+CONSTRAINT S21INVENT_FK FOREIGN KEY (INVENTORYID) REFERENCES S21INVENTORY (INVENTORYID),
+CONSTRAINT S21FURN_FK FOREIGN KEY (FURNITURECODE) REFERENCES S21FURNITURE (FURNITURECODE),
+CONSTRAINT S21DETAILCHECK CHECK (CONDITION LIKE 'Poor' OR CONDITION LIKE 'Fair' OR CONDITION LIKE 'Good' OR CONDITION LIKE 'Excellent' OR CONDITION LIKE 'New'  )
+);
+/*
+Table S21INVENTORYDETAIL created.
+*/
+--1B
+DESC S21INVENTORYDETAIL;
+/*
+Name          Null?    Type         
+------------- -------- ------------ 
+INVENTORYID   NOT NULL CHAR(10)     
+FURNITURECODE NOT NULL CHAR(8)      
+QUANTITY               NUMBER(2)    
+CONDITION              VARCHAR2(9)  
+LOCATION      NOT NULL VARCHAR2(30) 
+COMMENTS               VARCHAR2(30) 
+*/
+
+--*********************Question 4*********************************
+--4AB
+DROP TABLE S21STAFF;
+CREATE TABLE S21STAFF
+(STAFFID char(9) CONSTRAINT S21STAFF_PK PRIMARY KEY, 
+LNAME VARCHAR2(30),
+FNAME VARCHAR2(30),
+EMAIL VARCHAR2(30) UNIQUE, 
+HIREDATE DATE);
+/*
+Table S21STAFF created.
+*/
+--4C
+DESC S21STAFF;
+/*
+Name     Null?    Type         
+-------- -------- ------------ 
+STAFFID  NOT NULL CHAR(9)      
+LNAME             VARCHAR2(30) 
+FNAME             VARCHAR2(30) 
+EMAIL             VARCHAR2(30) 
+HIREDATE          DATE    
+*/
+--4D
+ALTER TABLE S21INVENTORY
+ADD CONSTRAINT INVENTORY_FK FOREIGN KEY (STAFFID) REFERENCES S21STAFF (STAFFID);
+/*
+Table S21INVENTORY altered.
+*/
+DESC S21INVENTORY;
+/*
+Name          Null?    Type         
+------------- -------- ------------ 
+INVENTORYID   NOT NULL CHAR(10)     
+INVENTORYDATE NOT NULL DATE         
+ROOMNUM       NOT NULL CHAR(4)      
+STAFFID                CHAR(9)      
+ROOMCONDITION          VARCHAR2(50) 
+*/
+--*********************Question 5*********************************
+SELECT Constraint_Name, Table_Name, Status, Search_Condition
+FROM USER_CONSTRAINTS
+WHERE TABLE_NAME IN ('S21ROOM', 'S21FURNITURE', 'S21INVENTORY', 'S21INVENTORYDETAIL', 'S21STAFF');
+/*
+CONSTRAINT_NAME                                                                                                                  TABLE_NAME                                                                                                                       STATUS   SEARCH_CONDITION                                                                
+-------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------- -------- --------------------------------------------------------------------------------
+S21ROOM_FK                                                                                                                       S21INVENTORY                                                                                                                     ENABLED                                                                                  
+S21INVENT_FK                                                                                                                     S21INVENTORYDETAIL                                                                                                               ENABLED                                                                                  
+S21FURN_FK                                                                                                                       S21INVENTORYDETAIL                                                                                                               ENABLED                                                                                  
+INVENTORY_FK                                                                                                                     S21INVENTORY                                                                                                                     ENABLED                                                                                  
+SYS_C0035460                                                                                                                     S21ROOM                                                                                                                          ENABLED  "SQUAREFOOTAGE" IS NOT NULL                                                     
+SYS_C0039717                                                                                                                     S21FURNITURE                                                                                                                     ENABLED  "WEIGHT" IS NOT NULL                                                            
+SYS_C0039720                                                                                                                     S21INVENTORY                                                                                                                     ENABLED  "ROOMNUM" IS NOT NULL                                                           
+SYS_C0039716                                                                                                                     S21FURNITURE                                                                                                                     ENABLED  "DESCRIPTION" IS NOT NULL                                                       
+SYS_C0039719                                                                                                                     S21INVENTORY                                                                                                                     ENABLED  "INVENTORYDATE" IS NOT NULL                                                     
+S21DETAILCHECK                                                                                                                   S21INVENTORYDETAIL                                                                                                               ENABLED  CONDITION LIKE 'Poor' OR CONDITION LIKE 'Fair' OR CONDITION LIKE 'Good' OR CONDI
+SYS_C0039881                                                                                                                     S21INVENTORYDETAIL                                                                                                               ENABLED  "LOCATION" IS NOT NULL                                                          
+
+CONSTRAINT_NAME                                                                                                                  TABLE_NAME                                                                                                                       STATUS   SEARCH_CONDITION                                                                
+-------------------------------------------------------------------------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------- -------- --------------------------------------------------------------------------------
+S21ROOM_PK                                                                                                                       S21ROOM                                                                                                                          ENABLED                                                                                  
+SYS_C0035462                                                                                                                     S21ROOM                                                                                                                          ENABLED                                                                                  
+S21FURNITURE_PK                                                                                                                  S21FURNITURE                                                                                                                     ENABLED                                                                                  
+S21INVENTORY_PK                                                                                                                  S21INVENTORY                                                                                                                     ENABLED                                                                                  
+S21INVENTORYDETAIL_PK                                                                                                            S21INVENTORYDETAIL                                                                                                               ENABLED                                                                                  
+SYS_C0039824                                                                                                                     S21STAFF                                                                                                                         ENABLED                                                                                  
+S21STAFF_PK                                                                                                                      S21STAFF                                                                                                                         ENABLED                                                                                  
+
+18 rows selected. 
+*/
+--*********************Question 6*********************************
+DROP TABLE S21ROOM CASCADE CONSTRAINTS;
+DROP TABLE S21FURNITURE CASCADE CONSTRAINTS;
+DROP TABLE S21INVENTORY CASCADE CONSTRAINTS;
+DROP TABLE S21INVENTORYDETAIL CASCADE CONSTRAINTS;
+DROP TABLE S21STAFF CASCADE CONSTRAINTS;
+/*
+
+Table S21ROOM dropped.
+
+Table S21FURNITURE dropped.
+
+Table S21INVENTORY dropped.
+
+Table S21INVENTORYDETAIL dropped.
+
+Table S21STAFF dropped.
+
+*/
+--*********************Question 7*********************************
+CREATE TABLE CENTRAL_DISPATCH
+(DISPATCHID char(10) CONSTRAINT CENTRALDISPATCH_PK PRIMARY KEY, 
+DISPATCHLOCATION VARCHAR2(30),
+DISPATCHTME DATE,
+DISPATCHPHONENUMBER VARCHAR2(10) UNIQUE, 
+SpecialEmployeeeID Char(5) UNIQUE
+);
+
+DESC CENTRAL_DISPATCH;
+/*
+Name                Null?    Type         
+------------------- -------- ------------ 
+DISPATCHID          NOT NULL CHAR(10)     
+DISPATCHLOCATION             VARCHAR2(30) 
+DISPATCHTME                  DATE         
+DISPATCHPHONENUMBER          VARCHAR2(10) 
+SPECIALEMPLOYEEEID           CHAR(5)    
+*/
+CREATE TABLE DISPATCH_OPERATOR
+(OPERATORNUMBER char(3) CONSTRAINT DISPATCHOP_PK PRIMARY KEY, 
+OPERATORFIRSTNAME VARCHAR2(30),
+OPERATORLASTNAME  VARCHAR2(30),
+OPERATORHOURSWORKED DATE,
+DISPATCHTME DATE,
+DISPATCHPHONENUMBER VARCHAR2(10) UNIQUE,
+DISPATCHID char(10),
+SpecialEmployeeeID Char(5) UNIQUE, 
+CONSTRAINT DISPATCHOP_FK FOREIGN KEY (DISPATCHID) REFERENCES CENTRAL_DISPATCH (DISPATCHID),
+CONSTRAINT SPECIALEMP_FK FOREIGN KEY (SpecialEmployeeeID) REFERENCES CENTRAL_DISPATCH (SpecialEmployeeeID)
+);
+
+DESC DISPATCH_OPERATOR;
+/*
+Name                Null?    Type         
+------------------- -------- ------------ 
+OPERATORNUMBER      NOT NULL CHAR(3)      
+OPERATORFIRSTNAME            VARCHAR2(30) 
+OPERATORLASTNAME             VARCHAR2(30) 
+OPERATORHOURSWORKED          DATE         
+DISPATCHTME                  DATE         
+DISPATCHPHONENUMBER          VARCHAR2(10) 
+DISPATCHID                   CHAR(10)     
+SPECIALEMPLOYEEEID           CHAR(5)       
+*/
+--(Logan Fish Lab Group 7)
+--The two tables are dispatch and dispatch Operator. the are related by a 
+--Parent child identifying relationship. the attribues that are required are all
+--of the ones listed in the descriptions above. 
+--I selected these two tables because i felt like they were a good choice
+--the importance of these two are pretty siginificant because an operator is required
+--for a lot of different things. 
+
+
+--*********************Question 8*********************************
+--A primary key can be created while setting up the column, or it can be created 
+--with afterward with an addition of a constraint. 
+--*********************Question 9*********************************
+--the describe command tells us about what attributes are part of the table, the character types
+--that belong to the attributes, and weither it can be null or not. 
+--*********************Question 10*********************************
+--Naming conventions are important for constraints because afterwards someone needs to
+--be able to know directly what the constraint belongs to based off its name. It helps with determining
+--what relation the constraint and attribute belongs to. 
+--*********************Question 11*********************************
+--To drop a table one would use drop table tablename; to drop the table. If the 
+--table is tied to other tables with constraints one would have to do
+--DROP TABLE table CASCADE CONSTRAINTS; to clean out the constraints and drop the table. 
+--this is addressed because once a table is created another table of the same name cannot be 
+--made with the same name. it is easier to update the table by removing it and recreating it in this
+--lab scenario. 
+
