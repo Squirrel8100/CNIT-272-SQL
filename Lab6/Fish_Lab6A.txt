@@ -1,0 +1,429 @@
+/*
+Logan Fish
+CNIT 27200 Spring 2021
+Lab Time: Thursday 2:30
+Duration: 
+*********************Question 1A*********************************
+*/
+SELECT work.worker_id, work.first_name, work.last_name, lunch.lunch_id, lunch.lunch_date
+FROM WORKER WORK INNER JOIN LUNCH LUNCH
+ON work.worker_id = lunch.worker_id
+WHERE work.city LIKE 'Aurora'
+ORDER BY lunch.lunch_date;
+--RESULTS
+/*
+WOR FIRST_NAME LAST_NAME              LUNCH_ID LUNCH_DAT
+--- ---------- -------------------- ---------- ---------
+570 Amy        Trance                       17 01-JUN-20
+560 Kevin      Ridgeman                     21 03-JUN-20
+560 Kevin      Ridgeman                     22 03-JUN-20
+560 Kevin      Ridgeman                     28 10-JUN-20
+560 Kevin      Ridgeman                     29 10-JUN-20
+560 Kevin      Ridgeman                     36 15-JUN-20
+
+6 rows selected. 
+*/
+
+--*********************Question 1B*********************************
+SELECT work.worker_id, work.first_name, work.last_name, lunch.lunch_id, lunch.lunch_date
+FROM WORKER WORK LEFT JOIN LUNCH LUNCH
+ON work.worker_id = lunch.worker_id
+WHERE work.city like 'Aurora'
+ORDER BY lunch.lunch_date;
+--results
+/*
+WOR FIRST_NAME LAST_NAME              LUNCH_ID LUNCH_DAT
+--- ---------- -------------------- ---------- ---------
+570 Amy        Trance                       17 01-JUN-20
+560 Kevin      Ridgeman                     21 03-JUN-20
+560 Kevin      Ridgeman                     22 03-JUN-20
+560 Kevin      Ridgeman                     28 10-JUN-20
+560 Kevin      Ridgeman                     29 10-JUN-20
+560 Kevin      Ridgeman                     36 15-JUN-20
+583 Tonya      Montre                                   
+
+7 rows selected. 
+*/
+--*********************Question 1C*********************************
+SELECT work.worker_id, work.first_name, work.last_name
+FROM WORKER WORK LEFT JOIN LUNCH LUNCH
+ON work.worker_id = lunch.worker_id
+WHERE lunch.lunch_id is null and work.city like 'Aurora'
+ORDER BY lunch.lunch_date;
+--results
+/*
+
+WOR FIRST_NAME LAST_NAME           
+--- ---------- --------------------
+583 Tonya      Montre              
+
+*/
+
+--*********************Question 2A-D*********************************
+SELECT FOOD.supplier_id, food.description, sum(lunch.item_number)
+FROM FOOD FOOD LEFT JOIN LUNCH_ITEM LUNCH
+ON FOOD.supplier_id = LUNCH.supplier_id
+AND FOOD.PRODUCT_CODE = LUNCH.PRODUCT_CODE
+GROUP BY FOOD.supplier_id, food.description;
+--RESULTS 
+/*
+
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Jmd Mushroom Pizza                            3
+Jmd Iced Tea                                 19
+Lss Veggie Soup                               4
+Jd6 Soda                                     59
+Foi French Fries                             31
+Dpz Cheese Pizza                              2
+Jmd Cole Slaw                                  
+Gls Mango Smoothie                             
+Hsd Chef Salad                               15
+Blu Turkey Club                               1
+Lak Caprese                                   1
+
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Lak Cheese Stick                              3
+Crm Grilled Cheese                            8
+Ard Sausage Pizza                             2
+Dpz Dinner Roll                               8
+Crm Ham Melt                                 13
+Foi Broccoli Salad                            3
+Jd6 Brownie                                  36
+Jd6 Coffee                                   10
+Lss Grilled Cheese                            9
+Hsd Velvet Cake                              17
+Crm Philly Melt                              24
+
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Blu Chips                                     2
+Crm Bagel                                     3
+Foi Barley Soup                               7
+Gls Sugar Cookie                             15
+Gls Breadstick                                2
+Jmd Potato Soup                               1
+Dpz Cheese Sauce                              3
+Hsd Chicken Soup                             14
+Foi Apple Pie                                14
+Hsd Protein Plate                             1
+Lak Spinach Salad                             2
+
+33 rows selected. 
+*/
+--*********************Question 2E*********************************
+SELECT FOOD.supplier_id, food.description, sum(lunch.item_number)
+FROM FOOD FOOD INNER JOIN LUNCH_ITEM LUNCH
+ON FOOD.supplier_id = LUNCH.supplier_id
+AND FOOD.PRODUCT_CODE = LUNCH.PRODUCT_CODE
+GROUP BY FOOD.supplier_id, food.description;
+--RESULTS
+/*
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Jmd Mushroom Pizza                            3
+Jmd Iced Tea                                 19
+Lss Veggie Soup                               4
+Jd6 Soda                                     59
+Foi French Fries                             31
+Dpz Cheese Pizza                              2
+Hsd Chef Salad                               15
+Blu Turkey Club                               1
+Lak Caprese                                   1
+Lak Cheese Stick                              3
+Crm Grilled Cheese                            8
+
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Ard Sausage Pizza                             2
+Dpz Dinner Roll                               8
+Crm Ham Melt                                 13
+Foi Broccoli Salad                            3
+Jd6 Brownie                                  36
+Jd6 Coffee                                   10
+Lss Grilled Cheese                            9
+Hsd Velvet Cake                              17
+Crm Philly Melt                              24
+Blu Chips                                     2
+Crm Bagel                                     3
+
+SUP DESCRIPTION          SUM(LUNCH.ITEM_NUMBER)
+--- -------------------- ----------------------
+Foi Barley Soup                               7
+Gls Sugar Cookie                             15
+Gls Breadstick                                2
+Jmd Potato Soup                               1
+Dpz Cheese Sauce                              3
+Hsd Chicken Soup                             14
+Foi Apple Pie                                14
+Hsd Protein Plate                             1
+Lak Spinach Salad                             2
+
+31 rows selected. 
+*/
+--*********************Question 3A*********************************
+select WORK.worker_id, WORK.first_name, WORK.last_name, DEPT.dept_code, DEPT.department_name
+from department DEPT inner join worker WORK
+on DEPT.dept_code = WORK.dept_code
+ORDER BY work.worker_id;
+--RESULTS
+/*
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+555 Tracy      Reynolds             Exe Executive                     
+556 Carole     Shreve               Tch Technology                    
+557 Cole       Gradle               Leg Legal                         
+558 Rita       Campbell             Hmn Human Resources               
+559 Maia       Neal                 Srv Service                       
+561 Maria      Bensen               Aud Auditing                      
+562 Tom        Armstrong            Com Compliance                    
+563 Trevor     Vought               Acc Accounting                    
+564 James      Kingman              Sal Sales                         
+565 Elizabeth  Cross                Tch Technology                    
+566 Tabitha    Tevona               Hmn Human Resources               
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+567 Darius     Richards             Leg Legal                         
+569 Dana       Sumner               Fin Finance                       
+570 Amy        Trance               Aud Auditing                      
+571 Denise     Harris               Hmn Human Resources               
+573 Kate       White                Aud Auditing                      
+575 Sean       Smith                Fin Finance                       
+576 Keyanna    Jones                Tch Technology                    
+577 Matt       Martin               Sal Sales                         
+578 Katelynn   Rayner               Tch Technology                    
+580 Roy        Gonzalez             Acc Accounting                    
+581 Brooks     Walsh                Srv Service                       
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+582 Angie      Cross                Acc Accounting                    
+584 Tyler      Harney               Tch Technology                    
+585 Sam        Frank                Srv Service                       
+
+25 rows selected. 
+*/
+--*********************Question 3B*********************************
+select WORK.worker_id, WORK.first_name, WORK.last_name, DEPT.dept_code, DEPT.department_name
+from department DEPT RIGHT JOIN worker WORK
+on DEPT.dept_code = WORK.dept_code
+ORDER BY work.worker_id;
+--RESULTS
+/*
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+555 Tracy      Reynolds             Exe Executive                     
+556 Carole     Shreve               Tch Technology                    
+557 Cole       Gradle               Leg Legal                         
+558 Rita       Campbell             Hmn Human Resources               
+559 Maia       Neal                 Srv Service                       
+560 Kevin      Ridgeman                                               
+561 Maria      Bensen               Aud Auditing                      
+562 Tom        Armstrong            Com Compliance                    
+563 Trevor     Vought               Acc Accounting                    
+564 James      Kingman              Sal Sales                         
+565 Elizabeth  Cross                Tch Technology                    
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+566 Tabitha    Tevona               Hmn Human Resources               
+567 Darius     Richards             Leg Legal                         
+568 Taylor     Young                                                  
+569 Dana       Sumner               Fin Finance                       
+570 Amy        Trance               Aud Auditing                      
+571 Denise     Harris               Hmn Human Resources               
+572 Kevin      Johnson                                                
+573 Kate       White                Aud Auditing                      
+574 Cassie     Irwin                                                  
+575 Sean       Smith                Fin Finance                       
+576 Keyanna    Jones                Tch Technology                    
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+577 Matt       Martin               Sal Sales                         
+578 Katelynn   Rayner               Tch Technology                    
+579 Yvonne     Rivera                                                 
+580 Roy        Gonzalez             Acc Accounting                    
+581 Brooks     Walsh                Srv Service                       
+582 Angie      Cross                Acc Accounting                    
+583 Tonya      Montre                                                 
+584 Tyler      Harney               Tch Technology                    
+585 Sam        Frank                Srv Service                       
+586 Jill       Williams                                               
+
+32 rows selected. 
+*/
+--*********************Question 3C*********************************
+
+select WORK.worker_id, WORK.first_name, WORK.last_name, DEPT.dept_code, DEPT.department_name
+from department DEPT LEFT JOIN worker WORK
+on DEPT.dept_code = WORK.dept_code
+ORDER BY dept.dept_code;
+--RESULTS
+/*
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+580 Roy        Gonzalez             Acc Accounting                    
+582 Angie      Cross                Acc Accounting                    
+563 Trevor     Vought               Acc Accounting                    
+573 Kate       White                Aud Auditing                      
+570 Amy        Trance               Aud Auditing                      
+561 Maria      Bensen               Aud Auditing                      
+562 Tom        Armstrong            Com Compliance                    
+555 Tracy      Reynolds             Exe Executive                     
+                                    Fac Facilities                    
+569 Dana       Sumner               Fin Finance                       
+575 Sean       Smith                Fin Finance                       
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+571 Denise     Harris               Hmn Human Resources               
+566 Tabitha    Tevona               Hmn Human Resources               
+558 Rita       Campbell             Hmn Human Resources               
+557 Cole       Gradle               Leg Legal                         
+567 Darius     Richards             Leg Legal                         
+                                    Mkt Marketing                     
+                                    Pur Purchasing                    
+577 Matt       Martin               Sal Sales                         
+564 James      Kingman              Sal Sales                         
+                                    Shp Shipping                      
+581 Brooks     Walsh                Srv Service                       
+
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+585 Sam        Frank                Srv Service                       
+559 Maia       Neal                 Srv Service                       
+576 Keyanna    Jones                Tch Technology                    
+584 Tyler      Harney               Tch Technology                    
+565 Elizabeth  Cross                Tch Technology                    
+556 Carole     Shreve               Tch Technology                    
+578 Katelynn   Rayner               Tch Technology                    
+
+29 rows selected. 
+*/
+--*********************Question 3D*********************************
+select WORK.worker_id, WORK.first_name, WORK.last_name, DEPT.dept_code, DEPT.department_name
+from department DEPT LEFT JOIN worker WORK
+on DEPT.dept_code = WORK.dept_code
+where dept.dept_code not in (select dept_code from worker where dept_code is not null)
+ORDER BY dept.dept_code;
+--RESULTS
+/*
+WOR FIRST_NAME LAST_NAME            DEP DEPARTMENT_NAME               
+--- ---------- -------------------- --- ------------------------------
+                                    Fac Facilities                    
+                                    Mkt Marketing                     
+                                    Pur Purchasing                    
+                                    Shp Shipping                      
+*/
+--*********************Question 4*********************************
+SELECT SUPPLIER_NAME
+FROM FOOD_SUPPLIER 
+WHERE SUPPLIER_CITY LIKE 'Chicago'
+UNION
+SELECT first_name || ' ' || last_name 
+FROM WORKER
+WHERE DEPT_CODE IN ('Tch', 'Leg', 'Fac');
+--RESULTS
+/*
+SUPPLIER_NAME                  
+-------------------------------
+Carole Shreve
+Cole Gradle
+Darius Richards
+Downtowner Pizza
+Elizabeth Cross
+Fontinas Italian
+Gio and Sons
+Jebston Montrose Deli
+Katelynn Rayner
+Keyanna Jones
+Lakeshore Bakery
+
+SUPPLIER_NAME                  
+-------------------------------
+Tyler Harney
+
+12 rows selected. 
+*/
+--*********************Question 5*********************************
+SELECT supplier_city
+FROM FOOD_SUPPLIER 
+INTERSECT
+SELECT city
+FROM WORKER;
+--results
+/*
+SUPPLIER_CITY                 
+------------------------------
+Aurora
+Chicago
+Glencoe
+Hinsdale
+Oak Brook
+Wilmette
+
+6 rows selected. 
+*/
+--*********************Question 6A*********************************
+select distinct NVL(TO_CHAR(supplier_city), 'No City') as City
+from food_supplier; 
+--results
+/*
+CITY                          
+------------------------------
+Oak Brook
+Aurora
+Orland Park
+Chicago
+Wilmette
+Glencoe
+Hinsdale
+
+7 rows selected. 
+*/
+--*********************Question 6B*********************************
+select distinct NVL(TO_CHAR(CITY), 'No City') as City
+from WORKER; 
+--RESULTS
+/*
+CITY                          
+------------------------------
+Oak Brook
+Aurora
+Chicago
+Wilmette
+Evanston
+Hinsdale
+Glencoe
+No City
+
+8 rows selected. 
+*/
+--*********************Question 6C*********************************
+select distinct NVL(TO_CHAR(supplier_city), 'No City') as City
+from food_supplier
+MINUS
+select distinct NVL(TO_CHAR(CITY), 'No City') as City
+from WORKER; 
+--RESULTS
+/*
+CITY                          
+------------------------------
+Orland Park
+*/
+--*********************Question 6D*********************************
+select distinct NVL(TO_CHAR(CITY), 'No City') as City
+from WORKER
+MINUS
+select distinct NVL(TO_CHAR(supplier_city), 'No City') as City
+from food_supplier;
+--RESULTS
+/*
+CITY                          
+------------------------------
+Evanston
+No City
+*/
